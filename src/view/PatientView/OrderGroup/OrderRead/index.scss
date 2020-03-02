@@ -1,0 +1,29 @@
+.order-read{
+  overflow: hidden;
+  width: 100%;
+  position: relative;
+  height: 500px;
+
+  &-title{
+    font-size: 20px;
+    font-weight: bolder;
+    margin-bottom: 30px;
+    text-align: center;
+  }
+
+  &-content {
+    text-indent:40px;
+  }
+
+  &-footer {
+    position: absolute;
+    bottom: 0px;
+    right: 10px;
+    width: 270px;
+    
+    &-button {
+      display: block;
+      margin-top: 12px;
+    }
+  }
+}

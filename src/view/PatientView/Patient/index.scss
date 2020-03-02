@@ -1,0 +1,46 @@
+.header {
+  img {
+    width: 60px;
+    float: left;
+    margin-right: 10px;
+  }
+
+  .myvalue {
+    position: absolute;
+    z-index: 10;
+    right: 30px;
+    top:0px;
+
+    .div {
+        margin-left: 20px;
+    }
+  }
+}
+
+.patient-content {
+  // min-height: 800px;
+  position: absolute;
+  bottom: 69px;
+  top:64px;
+  left: 0px;
+  right: 0px;
+}
+
+.patient-route {
+  overflow-y: scroll;  
+    position: absolute;
+    bottom: 0;
+    top:0;
+    left: 0px;
+    right: 0px;
+}
+
+.patient-footer {
+  position: absolute;
+  bottom: 0px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  background-color: rgba(0,21,41,1);
+  color:white;
+}

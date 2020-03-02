@@ -1,0 +1,19 @@
+.order {
+  width: 60%;
+  margin: 20px auto;
+  position: relative;
+
+
+  &-step {
+    position: fixed;
+    left: 100px;
+    top: 250px;
+    width: 150px;
+  }
+
+  &-content {
+    width: 100%;
+    padding: 30px;
+    box-shadow: 0px 0px 5px 2px gray;
+  }
+}
