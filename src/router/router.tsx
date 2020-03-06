@@ -48,7 +48,7 @@ function RootRoute(props: any) {
       <Route path='/Patient'  component={Patient}/>
       <Route path="/Doctor" render={() => {
         return (
-          props.user.type === 0
+          props.user.type === 2
            ? (
             <Doctor></Doctor>
           ) : (

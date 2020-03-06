@@ -1,0 +1,17 @@
+.order-table {
+  &-title {
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+  }
+  &-content {
+    &-item {
+      text-align: center;
+      cursor: pointer;
+
+      p:hover {
+        color: green;
+      }
+    }
+  }
+}

@@ -21,6 +21,11 @@ const doctorClient =  {
   },
   deleteSchedule(data:any) {
     return post('/schedule', data, 'delete');
+  },
+  getScheduleOfPeriod(departmentId: string | number) {
+    return get('/schedule/getScheduleOfPeriod',{
+      departmentId
+    })
   }
 };
 

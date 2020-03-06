@@ -38,7 +38,7 @@ type order = {
 
 function Order () {
   const [current, setScurrent] = useState<number>(0);
-  const [order, setOrder] = useState<order>({})
+  const [order, setOrder] = useState<any>({})
 
   const nextStep = (params: any) => {
     let cur = current;

@@ -1,28 +1,14 @@
 import React, { useState, useEffect } from 'react'
-import { Table } from 'antd';
+import { Table, message } from 'antd';
 import moment from 'moment';
-import CONS from '../../../../common/const';
-import departmentClient from '../../../../api/department';
+import CONST from '../../../../common/const';
+import doctorClient from '../../../../api/doctor';
 
 import 'antd/dist/antd.css'
 import './index.scss'
 
-const dataSource = [
-  {
-    key: '1',
-    name: '胡彦斌',
-    age: 32,
-    address: '西湖区湖底公园1号',
-  },
-  {
-    key: '2',
-    name: '胡彦祖',
-    age: 42,
-    address: '西湖区湖底公园1号',
-  },
-];
 
-const columns = [
+const columns:any[] = [
   {
     title: '科室',
     dataIndex: 'department',
@@ -34,12 +20,13 @@ const columns = [
           rowSpan: 1
         },
       };
-      if (index === 1) {
-        obj.props.rowSpan = 2;
+      if (index === 0) {
+        obj.props.rowSpan = 3;
+      } else {
+        obj.props.rowSpan = 0;
       }
       return obj;
     },
- 
   },
   {
     title: '时间',
@@ -73,27 +60,67 @@ const getRouteKey= (date: Date) => {
 
 
 function Order (props: any) {
+  const [dataSource, setDataSource] = useState<any[]>([]);
+  const [doctorList, setDctorList] = useState<any[]>([]); // 医生list
+
     // 获得近六天的list
   const initTableCol = () => {
     getScheduleDateList().forEach(item => {
       columns.push({
-        title: `${getDateString(item)}-星期${CONS.WEEK_DAY[item.getDay()]}`,
+        title: `${getDateString(item)}-星期${CONST.WEEK_DAY[item.getDay()]}`,
         key: getRouteKey(item),
-        dataIndex: getRouteKey(item)
+        dataIndex: getRouteKey(item),
+        // eslint-disable-next-line react/display-name
+        render: (record: any) => {
+          console.log(record);
+          return (
+            (<div className='order-table-content-item'>{
+              record ? record.map(item => {
+                return (
+                  <p key={item.workerId}>{item.name}</p>
+                )
+              }): '无' 
+            }</div>)
+          )
+        }
       })
-    })
+    });
   }
 
-  async function fetchDeparment () {
-    const res: any = await departmentClient.getdepartments();
-    if (res.code === 0) {
-      if(Array.isArray(res.data)) {
-        let department = res.data.find(item => item.departmentId == props.order.departmentId);
-        if (department) {
-
-        }
-      }
+  async function getDoctors(params: any) {
+    const res:any =  await doctorClient.getDocters(params);
+    if(res.code === 0) {
+    // 医生列表
+      setDctorList(res.data);
     }
+  }
+
+  async function fetchSchedule () {
+    const res:any =  await doctorClient.getScheduleOfPeriod(props.order.department.departmentId);
+    if(res.code !== 0) {
+      message.error({
+        content: '接口错误'
+      })
+      return;
+    }
+    const midArray = [];
+    [0, 1, 2].forEach(item => {
+      const fliterray = res.data.map(it => it[item])
+      let obj = {};
+      fliterray.forEach(it => {
+        obj[getRouteKey(it.data)] = it.docters && it.docters.split(',').map(doctor => {
+          return doctorList.find(doctorItem => doctorItem.workerId === doctor);
+        })
+      })
+     
+      midArray.push({
+        key: props.order.department.departmentId + item,
+        department: props.order.department.departmentName,
+        time: CONST.WORK_SHIFTS[item],
+        ...obj
+      })
+    })
+    setDataSource(midArray);
   }
 
   useEffect(() => {
@@ -101,16 +128,26 @@ function Order (props: any) {
   },[]);
 
   useEffect(() => {
-    if(props.order.departmentId) {
-      fetchDeparment()
+    if(props.order.department) {
+      getDoctors({departmentId: props.order.department.departmentId});
     }
   }, [props.order]);
+
+  useEffect(() => {
+    if(doctorList.length > 0) {
+      fetchSchedule();
+    }
+  }, [doctorList]);
 
   return (
     <div className="order-table">
         <p className="order-table-title">科室值班表</p>
         <div className="order-table-content">
-          <Table dataSource={dataSource} columns={columns} pagination={false}/>
+          <Table 
+          bordered
+          dataSource={dataSource} 
+          columns={columns} 
+          pagination={false}/>
         </div>
         <div className="order-table-footer">
         </div>

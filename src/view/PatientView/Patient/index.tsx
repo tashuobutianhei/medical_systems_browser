@@ -77,7 +77,6 @@ function Patient (props: PatientType & RouteComponentProps) {
     visible={LoginRegModalVisable} 
     toggleModalVisable={toggleModalVisable}
     loginSuccess={props.onLogin}
-
   ></LogRegFormModal>
   <Layout className="layout">
     <Header className="header">

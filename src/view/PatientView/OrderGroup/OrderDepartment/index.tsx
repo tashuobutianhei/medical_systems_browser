@@ -17,8 +17,9 @@ function Order (props: any) {
         duration: 2
       })
     } else {
+      const checkedDepartment = department.find(item => item.departmentId == checked);
       props.nextStep({
-        'departmentId': checked
+        'department': checkedDepartment
       });
     }
   }
