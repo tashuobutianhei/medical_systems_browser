@@ -4,7 +4,7 @@ import { Layout, Menu, Avatar, Dropdown } from 'antd';
 import { Route, Switch, withRouter, Redirect, RouteComponentProps } from 'react-router-dom'
 import { connect } from 'react-redux'
 
-import { userLogin, userLogout } from '../../../actiosn/user';
+import { userLogin, userLogout } from '../../../action/user';
 import jsCookie from 'js-cookie';
 
 import DoctorCase from '../DoctorCase/index';

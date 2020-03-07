@@ -6,7 +6,7 @@ import 'antd/dist/antd.css';
 import './index.scss';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { userLogin } from '../../actiosn/user';
+import { userLogin } from '../../action/user';
 import { LoginModal } from '../workerLoginModal';
 
 type Props = {

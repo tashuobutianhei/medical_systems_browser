@@ -8,7 +8,7 @@ import Doctor from '../view/DoctoView/Doctor/index';
 
 import userClient from '../api/user';
 
-import { userLogin, userLogout } from '../actiosn/user'
+import { userLogin, userLogout } from '../action/user'
 
 
 import 'antd/dist/antd.css';

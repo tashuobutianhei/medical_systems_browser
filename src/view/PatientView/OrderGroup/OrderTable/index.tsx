@@ -3,10 +3,17 @@ import { Table, message } from 'antd';
 import moment from 'moment';
 import CONST from '../../../../common/const';
 import doctorClient from '../../../../api/doctor';
+import OrderModal from '../../../../component/OrderModal';
 
 import 'antd/dist/antd.css'
 import './index.scss'
 
+type order =  {
+  departmentId?: string | number
+  workerId?: string
+  wokrId?: string
+  doctorInfo?: any
+}
 
 const columns:any[] = [
   {
@@ -60,8 +67,16 @@ const getRouteKey= (date: Date) => {
 
 
 function Order (props: any) {
+
+  const [visable, setvisable] = useState<boolean>(false);
+  const [order, setOrder] = useState<order>({})
   const [dataSource, setDataSource] = useState<any[]>([]);
   const [doctorList, setDctorList] = useState<any[]>([]); // 医生list
+
+  const orderHandle = (params: order) => {
+    setOrder(params);
+    setvisable(true);
+  }
 
     // 获得近六天的list
   const initTableCol = () => {
@@ -72,12 +87,18 @@ function Order (props: any) {
         dataIndex: getRouteKey(item),
         // eslint-disable-next-line react/display-name
         render: (record: any) => {
-          console.log(record);
           return (
             (<div className='order-table-content-item'>{
               record ? record.map(item => {
                 return (
-                  <p key={item.workerId}>{item.name}</p>
+                  <p key={item.doctor.workerId} onClick={() => {
+                    orderHandle({
+                      departmentId: props.order.department.departmentId,
+                      workerId: item.doctor.workerId,
+                      wokrId: item.wokrId,
+                      doctorInfo: item.doctor
+                    })
+                  }}>{item.doctor.name}</p>
                 )
               }): '无' 
             }</div>)
@@ -109,7 +130,10 @@ function Order (props: any) {
       let obj = {};
       fliterray.forEach(it => {
         obj[getRouteKey(it.data)] = it.docters && it.docters.split(',').map(doctor => {
-          return doctorList.find(doctorItem => doctorItem.workerId === doctor);
+          return {
+            doctor: doctorList.find(doctorItem => doctorItem.workerId === doctor),
+            wokrId: it.wokrId
+          };
         })
       })
      
@@ -141,6 +165,7 @@ function Order (props: any) {
 
   return (
     <div className="order-table">
+        <OrderModal visabley={visable} setvisable={setvisable} orderInfo={order} ></OrderModal>
         <p className="order-table-title">科室值班表</p>
         <div className="order-table-content">
           <Table 

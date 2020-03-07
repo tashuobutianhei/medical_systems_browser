@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { DownOutlined, UserOutlined } from '@ant-design/icons';
 import { Layout, Menu, Avatar, Dropdown } from 'antd';
 import { Route, Switch, withRouter, Redirect, RouteComponentProps } from 'react-router-dom'
@@ -13,9 +13,10 @@ import Department from '../Department';
 import Order from '../Order';
 import Guide from '../Guide';
 import {LoginRegModal as LogRegFormModal} from '../../../component/loginAndReg'
-import { userLogin, userLogout } from '../../../actiosn/user';
+import { userLogin, userLogout } from '../../../action/user';
 import tool from '../../../common/util';
 import jsCookie from 'js-cookie';
+import part from '../../../common/part'
 
 
 
@@ -71,13 +72,13 @@ function Patient (props: PatientType & RouteComponentProps) {
 
   let key = props.location.pathname.split('/')[2];
 
-
   return <>
   <LogRegFormModal 
     visible={LoginRegModalVisable} 
     toggleModalVisable={toggleModalVisable}
     loginSuccess={props.onLogin}
   ></LogRegFormModal>
+  <div id="particles-js"></div>
   <Layout className="layout">
     <Header className="header">
       <img src="/img/logo.png" onClick={(e: any) => {
