@@ -78,6 +78,12 @@ function Order (props: any) {
     setvisable(true);
   }
 
+  const nextStep = (caseId: string) => {
+    props.nextStep({
+      'caseId': caseId
+    });
+  }
+
     // 获得近六天的list
   const initTableCol = () => {
     getScheduleDateList().forEach(item => {
@@ -129,6 +135,9 @@ function Order (props: any) {
       const fliterray = res.data.map(it => it[item])
       let obj = {};
       fliterray.forEach(it => {
+        if(it === undefined) {
+          return {}
+        }
         obj[getRouteKey(it.data)] = it.docters && it.docters.split(',').map(doctor => {
           return {
             doctor: doctorList.find(doctorItem => doctorItem.workerId === doctor),
@@ -165,7 +174,11 @@ function Order (props: any) {
 
   return (
     <div className="order-table">
-        <OrderModal visabley={visable} setvisable={setvisable} orderInfo={order} ></OrderModal>
+        <OrderModal 
+        visabley={visable} 
+        setvisable={setvisable} 
+        orderInfo={order}
+        nextStepFuc={nextStep} ></OrderModal>
         <p className="order-table-title">科室值班表</p>
         <div className="order-table-content">
           <Table 

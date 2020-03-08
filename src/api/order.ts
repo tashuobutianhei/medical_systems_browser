@@ -13,6 +13,11 @@ const orderClient =  {
     return post('/order', {
       ...params
     });
+  },
+  orderInfo(params) {
+    return post('/order/info', {
+      ...params
+    });
   }
 };
 

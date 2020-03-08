@@ -4,9 +4,13 @@ import { Steps, Divider } from 'antd';
 import OrderRead from '../OrderGroup/OrderRead';
 import OrderDepartment from '../OrderGroup/OrderDepartment';
 import OrderTable from '../OrderGroup/OrderTable';
+import OrderForm from '../OrderGroup/OrderForm';
 
 import 'antd/dist/antd.css'
 import './index.scss'
+
+const mockCaseId = 'm6Ga26wQdk2o';
+
 
 const { Step } = Steps;
 
@@ -74,6 +78,9 @@ function Order () {
           }
           {
             current == 2 ? <OrderTable nextStep={nextStep} order={order}></OrderTable> : null
+          }
+          {
+            current == 3 ? <OrderForm nextStep={nextStep} order={order}></OrderForm> : null
           }
         </div>
     </div>

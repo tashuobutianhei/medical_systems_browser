@@ -12,16 +12,16 @@ type Props = {
     workerId?: string
     wokrId?: string
     doctorInfo? : any
-  }
+  },
+  nextStepFuc: any
 }
 
 function OrderModal(props: Props){
-
   const [confirmLoading, setconfirmLoading] = useState<boolean>(false);
   const [order, setorder] = useState<any>({});
   const [doctor, setDoctor] =  useState<any>({});
 
-  const { visabley, setvisable } = props;
+  const { visabley, setvisable, nextStepFuc } = props;
 
   const handleOk = async () => {
     setconfirmLoading(true);
@@ -32,10 +32,12 @@ function OrderModal(props: Props){
 
     if(res.code === 0) {
       setconfirmLoading(false);
+      
       setvisable(false);
       message.success({
         content: '挂号成功'
       })
+      nextStepFuc(res.data.caseId);
     } else {
       setconfirmLoading(false);
       message.error({
