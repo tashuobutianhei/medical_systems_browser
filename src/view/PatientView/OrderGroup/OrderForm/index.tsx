@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Button, message, Input, Form, Checkbox ,Switch,DatePicker, Modal } from 'antd';
+import { Button, message, Input, Form ,Switch, DatePicker, Modal } from 'antd';
 
 import 'antd/dist/antd.css'
 import './index.scss'

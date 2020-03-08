@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Checkbox, message, Row, Col } from 'antd';
+import { Button, message, Row, Col } from 'antd';
 import departmentlient from '../../../../api/department';
-
 
 import 'antd/dist/antd.css'
 import './index.scss'

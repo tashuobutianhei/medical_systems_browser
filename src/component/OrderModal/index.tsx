@@ -1,4 +1,4 @@
-import { Modal, Button, Row, Col, message } from 'antd';
+import { Modal, Row, Col, message } from 'antd';
 import React, { useState, useEffect } from 'react';
 import orderClient from '../../api/order';
 import CONST from '../../common/const';

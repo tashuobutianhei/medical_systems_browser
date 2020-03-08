@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Steps, Divider } from 'antd';
+import { Steps, Divider, message } from 'antd';
 
 import OrderRead from '../OrderGroup/OrderRead';
 import OrderDepartment from '../OrderGroup/OrderDepartment';
@@ -8,9 +8,7 @@ import OrderForm from '../OrderGroup/OrderForm';
 
 import 'antd/dist/antd.css'
 import './index.scss'
-
-const mockCaseId = 'm6Ga26wQdk2o';
-
+import { connect } from 'react-redux';
 
 const { Step } = Steps;
 
@@ -36,15 +34,17 @@ const StepList = [
   }
 ]
 
-type order = {
-  departmentId?: string | number,
-}
-
-function Order () {
+function Order (props: any) {
   const [current, setScurrent] = useState<number>(0);
   const [order, setOrder] = useState<any>({})
 
   const nextStep = (params: any) => {
+    if(!(props.user && props.type === 0)) {
+      message.error({
+        content: '挂号请先登陆'
+      })
+      return;
+    }
     let cur = current;
     setScurrent(++cur);
     if(typeof params === 'object' && Object.keys(params).length > 0) {
@@ -87,4 +87,10 @@ function Order () {
   );
 }
 
-export default Order;
+export default connect(
+  (state: { user: any; }) => {
+    return {
+      user: state.user
+    }
+  }
+)(Order);

@@ -1,3 +1,4 @@
+/* eslint-disable react/display-name */
 import { Table } from 'antd';
 import React from 'react';
 import CONST from '../../common/const';
@@ -9,8 +10,7 @@ function EditTable (props: any) {
       title: '',
       width: 40,
       render: (a) => {
-        console.log()
-        return  <span>{props.data.map(item => item.workerId).indexOf(a.workerId)+1}</span>
+        return  <span>{Array.isArray(props.data) && props.data.map(item => item.workerId).indexOf(a.workerId)+1}</span>
       }
      
     },
