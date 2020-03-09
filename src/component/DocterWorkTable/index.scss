@@ -1,0 +1,79 @@
+.workTable {
+  margin: 30px auto;
+  width: 60%;
+  border-top: 1px gray groove;
+  background-color: white;
+  position: relative;
+  border-radius: 5px;
+  overflow: hidden;
+
+  &-title {
+    font-size: 20px;
+    text-align: center;
+    padding-top: 5px;
+    border-left: 1px gray groove;
+    border-right: 1px gray groove;
+
+    p:nth-child(2) {
+      font-size: 14px;
+      color: gray;
+      text-decoration: underline;
+      margin-bottom: 0;
+      padding-bottom: 16px;
+    }
+  }
+
+  &-tag {
+    position: absolute;
+    right: -40px;
+    top: -40px;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 10px;
+    background-color: green;
+    opacity: .5;
+
+    span {
+      position: absolute;
+      left: 15px;
+      bottom: 40px;
+      font-size: 16px;
+      color: white;
+      opacity: 1;
+    }
+  }
+
+  &-row {
+    display: flex;
+    justify-content: space-around;
+    font-size: 16px;
+    margin-bottom: 0;
+  }
+
+  &-col {
+    flex: 1;
+    border: 1px gray groove;
+    padding: 10px 20px;
+  }
+
+  &-label {
+    font-weight: bolder;
+    padding-right: 10px;
+  }
+
+  &-textArea {
+    min-height: 40px;
+  }
+
+  &-formItem {
+    // border: 1px red solid;
+    width: 70%;
+    margin-left: 60px;
+  }
+
+  &-formCol {
+    margin-bottom: 8px;
+  }
+}

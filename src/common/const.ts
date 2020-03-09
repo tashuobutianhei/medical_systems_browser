@@ -24,5 +24,14 @@ export default {
     4: '四',
     5: '五',
     6: '六'
+  },
+  SEX: {
+    0: '女',
+    1: '男'
+  },
+  MODE: {
+    'doctor': '诊断模式',
+    'patient': '病例查看',
+    'hospital': '住院记录'
   }
 }
