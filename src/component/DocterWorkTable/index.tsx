@@ -3,6 +3,7 @@ import { withRouter, RouteComponentProps } from 'react-router-dom';
 import CONST from '../../common/const';
 import { Input, Select, Button, Row, Col, Switch, message } from 'antd';
 import patientCaseClient from '../../api/patientCase';
+import HospitalLIst from '../HospitalLIst';
 
 import 'antd/dist/antd.css'
 import './index.scss'
@@ -65,7 +66,7 @@ function DocterWorkTable (props: Props & RouteComponentProps) {
           break;
       }
       setMode(modeString);      
-      if(modeString === 'patient' || modeString === 'mhospitalodeString') {
+      if(modeString === 'patient' || modeString === 'hospital') {
         initHooksVal(patientCase);
       }
     }
@@ -267,7 +268,7 @@ function DocterWorkTable (props: Props & RouteComponentProps) {
                       <Select 
                       style ={{ width: 160 }} 
                       disabled={mode !== 'doctor'}
-                      value={ assayItem.assayId}
+                      defaultValue={assayItem.assayId}
                       onChange={(val)=>{
                         assaySelectChange(val, assayItem.assayId);
                       }}>
@@ -364,7 +365,11 @@ function DocterWorkTable (props: Props & RouteComponentProps) {
           </Row>
         </div>
       </div>
-
+      {
+        Hospitalization && mode === 'hospital' ? 
+        <HospitalLIst mode='doctor' examination={props.examination} hospitalList={[]}></HospitalLIst>
+        : null
+      }
       <div className="workTable-col">
         <Button type='primary' 
         onClick={clickOk}

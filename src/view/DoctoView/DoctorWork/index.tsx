@@ -15,9 +15,12 @@ const { SubMenu } = Menu;
 
 function DocterInfo (props: any & RouteComponentProps) {
 
-  const [patientCases, setPatientCases] = useState<any>({});
+  const [patientCasesPat, setPatientCasesPat] = useState<any>({});
   const [patientCasesHos, setPatientCasesHos] = useState<any>({});
   const [examination, setExaminationRes] = useState<any>({});
+
+  const [patientCases, setPatientCases] = useState<any>({});
+
 
   useEffect(() => {
     const fetchDate = async () =>  {
@@ -25,13 +28,13 @@ function DocterInfo (props: any & RouteComponentProps) {
       if (res.code === 0) {
         
         // 诊断
-        setPatientCases(res.data.filter(item => {
-          return item.status === 0 ||item.status === null;
+        setPatientCasesPat(res.data.filter(item => {
+          return item.status == 0 ||item.status === null;
         }))
 
         // 住院
         setPatientCasesHos(res.data.filter(item => {
-          return item.status === 2;
+          return item.status == 2;
         }))
         
       } else {
@@ -73,10 +76,11 @@ function DocterInfo (props: any & RouteComponentProps) {
             }
           >
             {
-              Array.isArray(patientCases) && patientCases.map((item,index) => {
+              Array.isArray(patientCasesPat) && patientCasesPat.map((item,index) => {
                 return (
                   <Menu.Item key={item.caseId} onClick={
                     () => {
+                      setPatientCases(patientCasesPat);
                       props.history.push(`/Doctor/Home/${item.caseId}`)
                     }
                   }
@@ -99,7 +103,8 @@ function DocterInfo (props: any & RouteComponentProps) {
                 return (
                   <Menu.Item key={item.caseId} onClick={
                     () => {
-                      props.history.push(`/Doctor/Home/${item.caseId}`)
+                      setPatientCases(patientCasesHos);
+                      props.history.push(`/Doctor/Home/${item.caseId}`);
                     }
                   }
                   > {index+1} - {item.patientInfo.name}</Menu.Item>
