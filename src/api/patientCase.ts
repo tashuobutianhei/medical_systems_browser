@@ -7,6 +7,9 @@ const patientCaseClient =  {
   },
   setPatientCaseModeDoctor(params) {
     return post('/patientCase/doctor', params);
+  },
+  getAssayById(params) {
+    return get('/patientCase/assay', params);
   }
 };
 

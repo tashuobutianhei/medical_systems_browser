@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter, Route, Switch } from 'react-router-dom';
 import patientCaseClient from '../../../api/patientCase';
 import departmentClient from '../../../api/department';
-import { CalendarOutlined} from '@ant-design/icons';
+import { CalendarOutlined, UnorderedListOutlined} from '@ant-design/icons';
 import DocterWorkTable from '../../../component/DocterWorkTable'
 
 import 'antd/dist/antd.css'
@@ -16,13 +16,24 @@ const { SubMenu } = Menu;
 function DocterInfo (props: any & RouteComponentProps) {
 
   const [patientCases, setPatientCases] = useState<any>({});
+  const [patientCasesHos, setPatientCasesHos] = useState<any>({});
   const [examination, setExaminationRes] = useState<any>({});
 
   useEffect(() => {
     const fetchDate = async () =>  {
       const res:any = await patientCaseClient.getPatientCaseById({workerId: props.user.workerId})
       if (res.code === 0) {
-        setPatientCases(res.data);
+        
+        // 诊断
+        setPatientCases(res.data.filter(item => {
+          return item.status === 0 ||item.status === null;
+        }))
+
+        // 住院
+        setPatientCasesHos(res.data.filter(item => {
+          return item.status === 2;
+        }))
+        
       } else {
         message.error({
           content: '服务错误'
@@ -74,13 +85,35 @@ function DocterInfo (props: any & RouteComponentProps) {
               })
             }
           </SubMenu>
+          <SubMenu
+            key="sub2"
+            title={
+              <span>
+                <UnorderedListOutlined />
+                住院记录
+              </span>
+            }
+          >
+             {
+              Array.isArray(patientCasesHos) && patientCasesHos.map((item,index) => {
+                return (
+                  <Menu.Item key={item.caseId} onClick={
+                    () => {
+                      props.history.push(`/Doctor/Home/${item.caseId}`)
+                    }
+                  }
+                  > {index+1} - {item.patientInfo.name}</Menu.Item>
+                )
+              })
+            }
+          </SubMenu>
           </Menu>
         </Sider>
         <Content className="content">
           <Switch>
               <Route exact path="/Doctor/Home/:caseId" component={() => {
                 return(
-                  <DocterWorkTable patientCase={patientCases} examination={examination} mode="doctor"></DocterWorkTable>
+                  <DocterWorkTable patientCase={patientCases} examination={examination}></DocterWorkTable>
                 )
               }} ></Route>
           </Switch>

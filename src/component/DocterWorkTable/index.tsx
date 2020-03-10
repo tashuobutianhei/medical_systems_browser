@@ -13,7 +13,6 @@ const { Option } = Select;
 type Props = {
   patientCase: any,
   examination: any,
-  mode: string
 }
 
 type assayType = {
@@ -24,9 +23,10 @@ type assayType = {
 
 function DocterWorkTable (props: Props & RouteComponentProps) {
 
+  const [mode, setMode] = useState<string>('');
   const [patientCase, setPatientCase] = useState<any>({});
   const [assay, setAssay] = useState<assayType[]>([{
-    assayId: 1,
+    assayId: 0,
     examinationId: 0,
     examinationResult: ''
   }]);
@@ -41,11 +41,66 @@ function DocterWorkTable (props: Props & RouteComponentProps) {
       if(Object.keys(props.match.params).indexOf('caseId') > -1) {
         caseId = props.match.params
       }
-      setPatientCase(props.patientCase.find(item => 
+      setPatientCase(Array.isArray(props.patientCase) && props.patientCase.find(item => 
           item.caseId === caseId.caseId
       ) || {})
     } 
   }, []);
+
+  useEffect(() => {
+    if (Object.keys(patientCase).length > 0) {
+      let status = patientCase.status;
+      let modeString = 'doctor'
+      switch (status) {
+        case 1:
+          modeString = 'patient'
+        break;
+        case 3:
+          modeString = 'patient'
+        break;
+        case 2:
+          modeString = 'hospital'
+        break;
+        default:
+          break;
+      }
+      setMode(modeString);      
+      if(modeString === 'patient' || modeString === 'mhospitalodeString') {
+        initHooksVal(patientCase);
+      }
+    }
+  }, [patientCase])
+
+
+  const initHooksVal = async (patientCase) => {
+    setDocterView(patientCase.docterView);
+    setResult(patientCase.result);
+    setMedicine(patientCase.medicine ? patientCase.medicine.split(','): patientCase.medicine);
+    setHospitalization(patientCase.HospitalizationId == '0' ? true : false);
+
+
+    const assayIds:any = await patientCaseClient.getAssayById({
+      'assayIds' : patientCase.assayId.split(',').filter(item => item != '').join(','),
+    })
+
+    if (assayIds.code === 0) {
+      setAssay(Array.isArray(assayIds.data) ? assayIds.data.map(item => {
+        return {
+          'assayId': item.assayId,
+          'examinationId': item.assayName,
+          'examinationResult': item.assayResult,
+        }
+      }) : [{
+        assayId: 1,
+        examinationId: 0,
+        examinationResult: ''
+      }])
+    } else {
+      message.error({
+        content: '服务错误',
+      })
+    }
+  };
 
   const handleAddAssay = () => {
     let id = assay.length + 1;
@@ -126,7 +181,8 @@ function DocterWorkTable (props: Props & RouteComponentProps) {
       if (res.code === 0) {
         message.success({
           content: '诊断成功',
-        })
+        });
+        props.history.push(`/Doctor/Cases/`)
       } else {
         message.error({
           content: '服务错误',
@@ -138,7 +194,7 @@ function DocterWorkTable (props: Props & RouteComponentProps) {
   return (
     <div className="workTable">
       <div className="workTable-tag">
-        <span>{CONST.MODE[props.mode]}</span>
+        <span>{CONST.MODE[mode]}</span>
       </div>
       <div className="workTable-title">
         <p>病例表</p>
@@ -189,8 +245,9 @@ function DocterWorkTable (props: Props & RouteComponentProps) {
             autoSize={false}
             rows={3} 
             allowClear={true} 
-            disabled={props.mode !== 'doctor'}
+            disabled={mode !== 'doctor'}
             placeholder="请您填入您对病情的描述"
+            value={docterView}
             onChange={(val) => {
               FormChangeHandle('docterView', val.target.value);
             }}></TextArea>
@@ -209,12 +266,13 @@ function DocterWorkTable (props: Props & RouteComponentProps) {
                       <span style={{paddingRight: '10px'}}>选择检查项目：</span>
                       <Select 
                       style ={{ width: 160 }} 
-                      disabled={props.mode !== 'doctor'}
+                      disabled={mode !== 'doctor'}
+                      value={ assayItem.assayId}
                       onChange={(val)=>{
                         assaySelectChange(val, assayItem.assayId);
                       }}>
                         {
-                          props.examination && props.examination.map(item => {
+                          Array.isArray(props.examination) && props.examination.map(item => {
                             return (
                               <Option key={item.examinationId} value={item.examinationId}>
                                 {item.examinationName}
@@ -227,14 +285,19 @@ function DocterWorkTable (props: Props & RouteComponentProps) {
                     <Col>
                       <Input 
                       placeholder="填写检查结果" 
-                      disabled={props.mode !== 'doctor'} 
+                      disabled={mode !== 'doctor'} 
+                      value={assayItem.examinationResult}
                       onChange={(e)=> {
                         assayInputChange(e.target.value, assayItem.assayId);
                       }}></Input>
                     </Col>
                     <Col>
-                      <Button type='primary' onClick={handleAddAssay}>添加</Button>
-                      <Button type='danger' onClick={() => {
+                      <Button type='primary' 
+                      disabled={mode !== 'doctor'} 
+                      onClick={handleAddAssay}>添加</Button>
+                      <Button type='danger' 
+                      disabled={mode !== 'doctor'} 
+                      onClick={() => {
                         handleDeleteAssay(assayItem.assayId)
                       }}>删除</Button>
                     </Col>
@@ -254,7 +317,8 @@ function DocterWorkTable (props: Props & RouteComponentProps) {
               rows={3} 
               allowClear={true} 
               placeholder="填入诊断结果"
-              disabled={props.mode !== 'doctor'}
+              disabled={mode !== 'doctor'}
+              value={result}
               onChange={(val) => {
                 FormChangeHandle('result', val.target.value);
               }}></TextArea>
@@ -267,9 +331,10 @@ function DocterWorkTable (props: Props & RouteComponentProps) {
           <div className="workTable-textArea" style={{display: 'inlineBlock'}}>
               <Select 
               mode="tags" 
-              disabled={props.mode !== 'doctor'}
+              disabled={mode !== 'doctor'}
               style={{ width: '100%' }} 
               placeholder='请对症开药'
+              value={medicine}
               onChange={(val) => {
                 let medicineVal = '';
                 if(Array.isArray(val)) {
@@ -290,7 +355,8 @@ function DocterWorkTable (props: Props & RouteComponentProps) {
               </Col>
               <Col>
                 <Switch 
-                disabled={props.mode !== 'doctor'}
+                disabled={mode !== 'doctor'}
+                checked={Hospitalization}
                 onChange={(val) => {
                   FormChangeHandle('Hospitalization', val);
                 }}></Switch>
