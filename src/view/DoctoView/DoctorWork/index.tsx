@@ -63,7 +63,7 @@ function DocterInfo (props: any & RouteComponentProps) {
         <Menu
           mode="inline"
           // defaultSelectedKeys={[getScheduleDateList()[0].toDateString()]}
-          defaultOpenKeys={['sub1']}
+          defaultOpenKeys={['sub1','sub2']}
           style={{ height: '100%', borderRight: 0 }}
         >
           <SubMenu

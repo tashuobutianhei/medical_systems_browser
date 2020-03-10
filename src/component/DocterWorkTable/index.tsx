@@ -26,6 +26,7 @@ function DocterWorkTable (props: Props & RouteComponentProps) {
 
   const [mode, setMode] = useState<string>('');
   const [patientCase, setPatientCase] = useState<any>({});
+  
   const [assay, setAssay] = useState<assayType[]>([{
     assayId: 0,
     examinationId: 0,
@@ -366,13 +367,14 @@ function DocterWorkTable (props: Props & RouteComponentProps) {
         </div>
       </div>
       {
-        Hospitalization && mode === 'hospital' ? 
-        <HospitalLIst mode='doctor' examination={props.examination} hospitalList={[]}></HospitalLIst>
+        Hospitalization && mode !== 'doctor' ? 
+        <HospitalLIst mode={mode} examination={props.examination} hospitalList={[]}></HospitalLIst>
         : null
       }
       <div className="workTable-col">
         <Button type='primary' 
         onClick={clickOk}
+        disabled={mode === 'patient'}
         style={{
           width: '100%',
           height: '40px',
