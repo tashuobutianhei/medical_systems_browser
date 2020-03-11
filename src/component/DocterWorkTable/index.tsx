@@ -4,9 +4,11 @@ import CONST from '../../common/const';
 import { Input, Select, Button, Row, Col, Switch, message } from 'antd';
 import patientCaseClient from '../../api/patientCase';
 import HospitalLIst from '../HospitalLIst';
+import { updatePatient, updatePatientAssay } from '../../action/patientCase';
 
 import 'antd/dist/antd.css'
 import './index.scss'
+import { connect } from 'react-redux';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -14,6 +16,9 @@ const { Option } = Select;
 type Props = {
   patientCase: any,
   examination: any,
+  updatePatient: any,
+  updatePatientAssay: any
+  patientCaseInfo: any
 }
 
 type assayType = {
@@ -26,20 +31,10 @@ function DocterWorkTable (props: Props & RouteComponentProps) {
 
   const [mode, setMode] = useState<string>('');
   const [patientCase, setPatientCase] = useState<any>({});
-  
-  const [assay, setAssay] = useState<assayType[]>([{
-    assayId: 0,
-    examinationId: 0,
-    examinationResult: ''
-  }]);
-  const [docterView, setDocterView] = useState<string>('');
-  const [result, setResult] = useState<string>('');
-  const [medicine, setMedicine] = useState<string>('');
-  const [Hospitalization, setHospitalization] = useState<boolean>(false);
 
   useEffect(() => {
     if(props.patientCase) {
-      let caseId;
+      let caseId: { caseId?: any; };
       if(Object.keys(props.match.params).indexOf('caseId') > -1) {
         caseId = props.match.params
       }
@@ -49,6 +44,11 @@ function DocterWorkTable (props: Props & RouteComponentProps) {
     } 
   }, []);
 
+  useEffect(() => {
+    console.log(props.patientCaseInfo)
+  }, [props.patientCaseInfo])
+
+  // 判断模式
   useEffect(() => {
     if (Object.keys(patientCase).length > 0) {
       let status = patientCase.status;
@@ -74,19 +74,20 @@ function DocterWorkTable (props: Props & RouteComponentProps) {
   }, [patientCase])
 
 
-  const initHooksVal = async (patientCase) => {
-    setDocterView(patientCase.docterView);
-    setResult(patientCase.result);
-    setMedicine(patientCase.medicine ? patientCase.medicine.split(','): patientCase.medicine);
-    setHospitalization(patientCase.HospitalizationId == '0' ? true : false);
-
+  const initHooksVal = async (patientCase: any) => {
+    props.updatePatient({
+      'docterView': patientCase.docterView,
+      'result': patientCase.result,
+      'medicine': patientCase.medicine,
+      'Hospitalization': patientCase.HospitalizationId == '0' ? true : false
+    })
 
     const assayIds:any = await patientCaseClient.getAssayById({
-      'assayIds' : patientCase.assayId.split(',').filter(item => item != '').join(','),
+      'assayIds' : patientCase.assayId.split(',').filter((item: string) => item != '').join(','),
     })
 
     if (assayIds.code === 0) {
-      setAssay(Array.isArray(assayIds.data) ? assayIds.data.map(item => {
+      props.updatePatientAssay(Array.isArray(assayIds.data) ? assayIds.data.map((item: any) => {
         return {
           'assayId': item.assayId,
           'examinationId': item.assayName,
@@ -96,7 +97,7 @@ function DocterWorkTable (props: Props & RouteComponentProps) {
         assayId: 1,
         examinationId: 0,
         examinationResult: ''
-      }])
+      }], '', 'set');
     } else {
       message.error({
         content: '服务错误',
@@ -105,90 +106,88 @@ function DocterWorkTable (props: Props & RouteComponentProps) {
   };
 
   const handleAddAssay = () => {
-    let id = assay.length + 1;
-    setAssay([...assay, {
-      assayId: id,
-      examinationId: 0,
-      examinationResult: ''
-    }])
+    props.updatePatientAssay({}, '', 'add');
   }
 
   const handleDeleteAssay = (assayId: number) => {
-    let midAssay = assay;
-    setAssay(midAssay.filter(item => {
-      return item.assayId !== assayId;
-    }))
+    props.updatePatientAssay({}, assayId, 'delete');
   }
 
 
   const assaySelectChange = (val: any, assayId: number) => {
-    setAssay(assay.map(item => {
-      if(item.assayId === assayId) {
-        return {
-          ...item,
-          examinationId: val
-        }
-      } else {
-        return item
-      }
-    }))
+    props.updatePatientAssay({
+      'examinationId': val
+    }, assayId, 'update');
   }
 
   const assayInputChange = (val: any, assayId: number) => {
-    setAssay(assay.map(item => {
-      if(item.assayId === assayId) {
-        return {
-          ...item,
-          examinationResult: val
-        }
-      } else {
-        return item
-      }
-    }))
+    props.updatePatientAssay({
+      'examinationResult': val
+    }, assayId, 'update');
   }
 
   const FormChangeHandle = (key: string, value: any) => {
-    switch (key) {
-      case 'docterView':
-        setDocterView(value);
-        break;
-      case 'result': 
-        setResult(value);
-        break;
-      case 'medicine': 
-        setMedicine(value);
-        break;
-      case 'Hospitalization': 
-        setHospitalization(value);
-        break;
-      default:
-        break;
+    let obj = {};
+    obj[key] = value;
+    props.updatePatient(obj);
+  }
+
+  const postDoctor = async (caseId: any) => {
+    const {docterView, result, medicine, Hospitalization, assay} = props.patientCaseInfo;
+      
+    const res:any = await patientCaseClient.setPatientCaseModeDoctor({
+      docterView,
+      result,
+      medicine,
+      'HospitalizationId': Hospitalization ? 1 : 0,
+      'caseId': caseId.caseId,
+      assay: JSON.stringify(assay),
+    });
+
+    if (res.code === 0) {
+      message.success({
+        content: '诊断成功',
+      });
+      props.history.push(`/Doctor/Cases/`)
+    } else {
+      message.error({
+        content: '服务错误',
+      })
+    }
+  }
+
+  const postHos = async (caseId: any) => {
+    const hospitalList = props.patientCaseInfo.hospitalList.filter(item => {
+        return item.type === 'set';
+      } 
+    );
+
+    console.log(hospitalList);
+    const res:any = await patientCaseClient.setPatientCaseModeHos({
+      'caseId': caseId.caseId,
+      hospitalList: JSON.stringify(hospitalList),
+    });
+
+    if (res.code === 0) {
+      message.success({
+        content: '诊断成功',
+      });
+      props.history.push(`/Doctor/Cases/`)
+    } else {
+      message.error({
+        content: '服务错误',
+      })
     }
   }
 
   const clickOk = async () => {
-    let caseId;
+    let caseId: { caseId?: any; };
     if(Object.keys(props.match.params).indexOf('caseId') > -1) {
       caseId = props.match.params
-      
-      const res:any = await patientCaseClient.setPatientCaseModeDoctor({
-        docterView,
-        result,
-        medicine,
-        Hospitalization,
-        'caseId': caseId.caseId,
-        assay: JSON.stringify(assay),
-      });
-
-      if (res.code === 0) {
-        message.success({
-          content: '诊断成功',
-        });
-        props.history.push(`/Doctor/Cases/`)
-      } else {
-        message.error({
-          content: '服务错误',
-        })
+      if( mode === 'doctor') {
+        postDoctor(caseId);
+      } else if( mode === 'hospital') {
+        postHos(caseId);
       }
     }
   }
@@ -249,7 +248,7 @@ function DocterWorkTable (props: Props & RouteComponentProps) {
             allowClear={true} 
             disabled={mode !== 'doctor'}
             placeholder="请您填入您对病情的描述"
-            value={docterView}
+            value={props.patientCaseInfo.docterView}
             onChange={(val) => {
               FormChangeHandle('docterView', val.target.value);
             }}></TextArea>
@@ -261,7 +260,7 @@ function DocterWorkTable (props: Props & RouteComponentProps) {
           <span className="workTable-label">化验结果:</span>
           <div className="workTable-formItem">
             {
-             assay.map(assayItem => {
+              props.patientCaseInfo.assay.map(assayItem => {
                 return (
                 <Row key={assayItem.assayId} className="workTable-formCol" justify='space-around'>
                     <Col>
@@ -320,7 +319,7 @@ function DocterWorkTable (props: Props & RouteComponentProps) {
               allowClear={true} 
               placeholder="填入诊断结果"
               disabled={mode !== 'doctor'}
-              value={result}
+              value={props.patientCaseInfo.result}
               onChange={(val) => {
                 FormChangeHandle('result', val.target.value);
               }}></TextArea>
@@ -336,7 +335,7 @@ function DocterWorkTable (props: Props & RouteComponentProps) {
               disabled={mode !== 'doctor'}
               style={{ width: '100%' }} 
               placeholder='请对症开药'
-              value={medicine}
+              value={props.patientCaseInfo.medicine}
               onChange={(val) => {
                 let medicineVal = '';
                 if(Array.isArray(val)) {
@@ -358,7 +357,7 @@ function DocterWorkTable (props: Props & RouteComponentProps) {
               <Col>
                 <Switch 
                 disabled={mode !== 'doctor'}
-                checked={Hospitalization}
+                checked={props.patientCaseInfo.Hospitalization}
                 onChange={(val) => {
                   FormChangeHandle('Hospitalization', val);
                 }}></Switch>
@@ -367,7 +366,8 @@ function DocterWorkTable (props: Props & RouteComponentProps) {
         </div>
       </div>
       {
-        Hospitalization && mode !== 'doctor' ? 
+        
+        props.patientCaseInfo.Hospitalization && mode !== 'doctor' ? 
         <HospitalLIst mode={mode} examination={props.examination} hospitalList={[]}></HospitalLIst>
         : null
       }
@@ -386,4 +386,29 @@ function DocterWorkTable (props: Props & RouteComponentProps) {
   );
 }
 
-export default withRouter(DocterWorkTable);
+
+
+
+const mapStateToProps = (state: { patientCase: any; }) => {
+  return {
+    patientCaseInfo: state.patientCase
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    updatePatient: (patientCaseInfo: any) => {
+      dispatch(updatePatient(patientCaseInfo))
+    },
+    updatePatientAssay: (patientCaseInfo: any, assayId: any, mode: any) => {
+      dispatch(updatePatientAssay(patientCaseInfo, assayId, mode))
+    },
+  }
+}
+
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(DocterWorkTable)
+);

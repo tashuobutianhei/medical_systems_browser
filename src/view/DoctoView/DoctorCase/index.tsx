@@ -24,7 +24,7 @@ function DocterInfo (props: any & RouteComponentProps) {
       if (res.code === 0) {
         // 诊断
         setPatientCases(res.data.filter(item => {
-          return item.status === 1 ||item.status === 3;
+          return item.status === 1 || item.status === 3;
         }))
       } else {
         message.error({

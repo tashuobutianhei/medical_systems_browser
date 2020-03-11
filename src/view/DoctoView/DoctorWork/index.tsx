@@ -6,6 +6,7 @@ import patientCaseClient from '../../../api/patientCase';
 import departmentClient from '../../../api/department';
 import { CalendarOutlined, UnorderedListOutlined} from '@ant-design/icons';
 import DocterWorkTable from '../../../component/DocterWorkTable'
+import {resetPatient} from '../../../action/patientCase'; 
 
 import 'antd/dist/antd.css'
 import './index.scss'
@@ -81,6 +82,7 @@ function DocterInfo (props: any & RouteComponentProps) {
                   <Menu.Item key={item.caseId} onClick={
                     () => {
                       setPatientCases(patientCasesPat);
+                      props.resetPatient();
                       props.history.push(`/Doctor/Home/${item.caseId}`)
                     }
                   }
@@ -104,6 +106,7 @@ function DocterInfo (props: any & RouteComponentProps) {
                   <Menu.Item key={item.caseId} onClick={
                     () => {
                       setPatientCases(patientCasesHos);
+                      props.resetPatient();
                       props.history.push(`/Doctor/Home/${item.caseId}`);
                     }
                   }
@@ -134,8 +137,17 @@ const mapStateToProps = (state: { user: any; }) => {
   }
 }
 
+const mapDispatchToProps = (dispatch) => {
+  return {
+    resetPatient: () => {
+      dispatch(resetPatient())
+    },
+  }
+}
+
 export default withRouter(
   connect(
     mapStateToProps,
+    mapDispatchToProps
   )(DocterInfo)
 );

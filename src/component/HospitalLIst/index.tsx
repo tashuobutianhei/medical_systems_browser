@@ -5,9 +5,12 @@ import { Input, Select, Button, Row, Col, Switch, message, Divider, Collapse, Ra
 import patientCaseClient from '../../api/patientCase';
 import moment from 'moment';
 import randomString from 'random-string';
+import { updateHospitalInfo, updateHospitalAssay } from '../../action/patientCase';
+
 
 import 'antd/dist/antd.css'
 import './index.scss'
+import { connect } from 'react-redux';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -19,6 +22,9 @@ type Props = {
   examination: any,
   mode: string,
   hospitalList: any[],
+  updatePatient: any,
+  updatePatientAssay: any
+  patientCaseInfo: any
 }
 
 type assayType = {
@@ -38,145 +44,58 @@ type hospitalType = {
 }
 
 function DocterWorkTable (props: Props & RouteComponentProps) {
-
-  const [patientStatus, setPatientStatus] = useState<string>('');
-  const [medicine, setMedicine] = useState<string>('');
-  const [TreatmentRecord, setTreatmentRecord] = useState<string>('');
-  const [recovery, setRecovery] = useState<string>('');
-
-
-  const [hospital, setHospital] = useState<hospitalType[]>([{
-    HospitalizationId: 0,
-    assays: [{
-      assayId: 0,
-      examinationId: 0,
-      examinationResult: ''
-    }],
-    patientStatus: '',
-    medicine: '',
-    TreatmentRecord: 'string',
-    recovery: '',
-    date: new Date(),
-  }]);
-
   useEffect(() => {
     if (Array.isArray(props.hospitalList)) {
       if (props.hospitalList.length > 0) {
-          setHospital(props.hospitalList);
+          props.updatePatient(props.hospitalList.map(item => {
+            return {
+              ...item,
+              'type': 'data'
+            }
+          }), '' ,'set');
       }
     }
   }, [props.hospitalList])
 
   const addHosipatal = () => {
-    let id = randomString({length: 12, numbers: true});
-
-    setHospital([
-      ...hospital, {
-        HospitalizationId: id,
-        assays: [{
-          assayId: randomString({length: 12, numbers: true}),
-          examinationId: 0,
-          examinationResult: ''
-        }],
-        patientStatus: '',
-        medicine: '',
-        TreatmentRecord: 'string',
-        recovery: '',
-        date: new Date(),
-      }
-    ])
+    props.updatePatient('', '' ,'add');
   }
 
   const handleDeleteAssay = (hosId: any, assayId: any) => {
-    setHospital(hospital.map(item => {
-      if(item.HospitalizationId === hosId) {
-        let id = item.assays.length + 1;
-        return {...item, 
-          assays: item.assays.filter(item => {
-            return item.assayId !== assayId;
-          })
-        }
-      }
-      return item;
-    }))
+    props.updatePatientAssay({}, hosId, assayId, 'delete');
   }
 
   const handleAddAssay = (hosId: any, ) => {
-    setHospital(hospital.map(item => {
-      if(item.HospitalizationId === hosId) {
-        let id = randomString({length: 12, numbers: true});
-
-        return {...item, assays: [...item.assays, {
-          'assayId': id,
-          'examinationId': 0,
-          'examinationResult': ''
-        }]}
-      }
-      return item;
-    }))
+    props.updatePatientAssay({}, hosId, {}, 'add');
   }
 
   const assaySelectChange = (val: any, hosId: any, assayId: any) => {
-    debugger
-    setHospital(hospital.map(item => {
-      if(item.HospitalizationId === hosId) {
-        // let id = item.assays.length + 1;
-        debugger
-        return {...item, assays: item.assays.map(it => {
-          if(it.assayId === assayId) {
-            debugger
-            return {
-              ...it,
-              examinationId: val
-            }
-          } else {
-            return it
-          }
-        })}
-      }
-      return item;
-    }))
+    props.updatePatientAssay({
+      'examinationId': val
+    }, hosId, assayId, 'update');
   }
 
   const assayInputChange = (val: any, hosId: any, assayId: any) => {
-    setHospital(hospital.map(item => {
-      if(item.HospitalizationId === hosId) {
-        let id = item.assays.length + 1;
-        return {...item, assays: item.assays.map(it => {
-          if(it.assayId === assayId) {
-            return {
-              ...it,
-              examinationResult: val
-            }
-          } else {
-            return it
-          }
-        })}
-      }
-      return item;
-    }))
+    props.updatePatientAssay({
+      'examinationResult': val
+    }, hosId, assayId, 'update');
   }
 
-
   const FormChangeHandle = (key: string, value: any, hosId: any) => {
-    setHospital(hospital.map(item => {
-      if(item.HospitalizationId === hosId) {
-         item[key] = value;
-         return item;
-      }
-      return item;
-    }));
+    let obj = {};
+    obj[key] = value;
+    props.updatePatient(obj, hosId, 'update');
   }
 
   return(
   <>
-  <Collapse  className="workTable-col" defaultActiveKey={hospital.map(item => item.HospitalizationId)}>
+  <Collapse  className="workTable-col" defaultActiveKey={props.patientCaseInfo.hospitalList.map(item => item.HospitalizationId)}>
     <div>
       <span className="workTable-label">住院记录:</span> 
       <Button type="primary" onClick={addHosipatal} disabled={props.mode !== 'hospital'}>新增记录</Button>
     </div>
     {
-      hospital.map(hosItem => {
+      props.patientCaseInfo.hospitalList.map(hosItem => {
         return (
           <Panel header={moment(hosItem.date).format('YYYY-MM-DD hh:mm a')} 
            key={hosItem.HospitalizationId}>
@@ -187,9 +106,9 @@ function DocterWorkTable (props: Props & RouteComponentProps) {
                     <Input 
                     width={500}
                     allowClear={true} 
-                    disabled={props.mode !== 'hospital'}
+                    disabled={props.mode !== 'hospital' || hosItem.type === 'data'}
                     placeholder="请您填入您对病情的描述"
-                    value={patientStatus}
+                    value={hosItem.patientStatus}
                     onChange={(val) => {
                       FormChangeHandle('patientStatus', val.target.value, hosItem.HospitalizationId);
                     }}></Input>
@@ -200,9 +119,12 @@ function DocterWorkTable (props: Props & RouteComponentProps) {
                   <div className="workTable-textArea">
                     <Radio.Group 
                     // value={recovery}
+                    disabled= {
+                      props.mode !== 'hospital' || hosItem.type === 'data'
+                    }
                     onChange={(val) => {
                       FormChangeHandle('recovery', val, hosItem.HospitalizationId);
-                    }} defaultValue={recovery}>
+                    }} defaultValue={hosItem.recovery}>
                       <Radio.Button value="0">未达到</Radio.Button>
                       <Radio.Button value="1">达到</Radio.Button>
                     </Radio.Group>
@@ -218,9 +140,11 @@ function DocterWorkTable (props: Props & RouteComponentProps) {
                 autoSize={false}
                 rows={3} 
                 allowClear={true} 
-                disabled={props.mode !== 'hospital'}
+                disabled= {
+                  props.mode !== 'hospital' || hosItem.type === 'data'
+                }                
                 placeholder="请您填入您对病情的描述"
-                value={TreatmentRecord}
+                value={hosItem.TreatmentRecord}
                 onChange={(val) => {
                   FormChangeHandle('TreatmentRecord', val.target.value, hosItem.HospitalizationId);
                 }}></TextArea>
@@ -232,10 +156,12 @@ function DocterWorkTable (props: Props & RouteComponentProps) {
               <div className="workTable-textArea">
                 <Select 
                 mode="tags" 
-                disabled={props.mode !== 'hospital'}
+                disabled= {
+                  props.mode !== 'hospital' || hosItem.type === 'data'
+                }
                 style={{ width: '100%' }} 
                 placeholder='请对症开药'
-                value={medicine.length > 0 && medicine.split(',').length > 0 ? medicine.split(',') : []}
+                value={hosItem.medicine.length > 0 && hosItem.medicine.split(',').length > 0 ?hosItem.medicine.split(',') : []}
                 onChange={(val) => {
                   let medicineVal = '';
                   if(Array.isArray(val)) {
@@ -257,7 +183,9 @@ function DocterWorkTable (props: Props & RouteComponentProps) {
                           <span style={{paddingRight: '10px'}} className="workTable-label">选择检查项目：</span>
                           <Select 
                           style ={{ width: 160 }} 
-                          disabled={props.mode !== 'hospital'}
+                          disabled= {
+                            props.mode !== 'hospital' || hosItem.type === 'data'
+                          }
                           defaultValue={assayItem.assayId.length >= 12 ? '' : assayItem.assayId}
                           onChange={(val)=>{
                             assaySelectChange(val, hosItem.HospitalizationId, assayItem.assayId);
@@ -276,21 +204,27 @@ function DocterWorkTable (props: Props & RouteComponentProps) {
                         <Col>
                           <Input 
                           placeholder="填写检查结果" 
-                          disabled={props.mode !== 'hospital'} 
+                          disabled= {
+                            props.mode !== 'hospital' || hosItem.type === 'data'
+                          }
                           value={assayItem.examinationResult}
                           onChange={(e)=> {
-                            assayInputChange(e.target.value,hosItem.HospitalizationId, assayItem.assayId);
+                            assayInputChange(e.target.value, hosItem.HospitalizationId, assayItem.assayId);
                           }}></Input>
                         </Col>
                         <Col>
                           <Button type='primary' 
-                          disabled={props.mode !== 'hospital'} 
+                          disabled= {
+                            props.mode !== 'hospital' || hosItem.type === 'data'
+                          }
                           onClick={() => {
                             handleAddAssay(hosItem.HospitalizationId)
                           }}>添加</Button>
                           {
                             hosItem.assays.length > 1 ?  <Button type='danger' 
-                            disabled={props.mode !== 'hospital'} 
+                            disabled= {
+                              props.mode !== 'hospital' || hosItem.type === 'data'
+                            }
                             onClick={() => {
                               handleDeleteAssay(hosItem.HospitalizationId, assayItem.assayId)
                             }}>删除</Button> : null
@@ -310,4 +244,26 @@ function DocterWorkTable (props: Props & RouteComponentProps) {
   );
 }
 
-export default withRouter(DocterWorkTable);
+const mapStateToProps = (state: { patientCase: any; }) => {
+  return {
+    patientCaseInfo: state.patientCase
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    updatePatient: (patientCaseInfo: any, HosId: any, mode: string) => {
+      dispatch(updateHospitalInfo(patientCaseInfo, HosId, mode))
+    },
+    updatePatientAssay: (patientCaseInfo: any ,HosId: any, assayId: any, mode: any) => {
+      dispatch(updateHospitalAssay(patientCaseInfo, HosId, assayId, mode))
+    },
+  }
+}
+
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(DocterWorkTable)
+);
