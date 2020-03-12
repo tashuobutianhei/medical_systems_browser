@@ -29,8 +29,8 @@ export function LoginModal(props: Props) {
           const res2: any = res;
           if(res2.code === 0) {
             jsCookie.set('the_docters_token', res2.data.token, { expires: 30, path: '/' });
-            props.loginSuccess(res2.data.user);
             props.toggleModalVisable(false);
+            props.loginSuccess(res2.data.user);
             
             message.success({
               content: res2.message,
@@ -44,7 +44,10 @@ export function LoginModal(props: Props) {
           }
         })
       } else {
-        
+        message.error({
+          content: '登陆失败',
+          duration: 2,
+        });
       }
       
     })
@@ -59,7 +62,7 @@ export function LoginModal(props: Props) {
     onOk={login}
     onCancel={()=> props.toggleModalVisable(false)}
     >
-      <WrappedLoginForm  ref={(c)=> loginForm = c }></WrappedLoginForm> : 
+      <WrappedLoginForm  ref={(c)=> loginForm = c } type='worker'></WrappedLoginForm>
   </Modal>
   )
 }

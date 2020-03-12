@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Route, Switch, Redirect } from 'react-router-dom';
+import { Route, Switch, Redirect, RouteComponentProps, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux'
 
 import Home from '../view/Home/index';
@@ -32,15 +32,23 @@ const mapDispatchToProps = (dispatch: (arg0: { type: string; userInfo?: any; }) 
 }
 
 
-function RootRoute(props: any) {
+function RootRoute(props: any & RouteComponentProps) {
+
   useEffect(() => {
     userClient.getUser().then(res => {
       const myRes: any = res
       if(myRes.code === 0) {
-        props.onLogin(myRes.data.user)
+        props.onLogin(myRes.data.user);
       }
     });
   }, []);
+
+  useEffect(() => {
+    if(props.user && props.user.workerId) {
+      props.history.push(`/Doctor`);
+    }
+  }, [props.user]);
+
 
 	return (
     <Switch>
@@ -60,7 +68,9 @@ function RootRoute(props: any) {
 	);
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(RootRoute);
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(RootRoute)
+);

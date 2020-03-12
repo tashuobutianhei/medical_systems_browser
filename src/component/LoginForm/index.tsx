@@ -10,7 +10,8 @@ import './index.scss'
 
 type Props = {
   changeStatus?: (aciton: string)=> void
-  form: any
+  form: any,
+  type?: string
 }
 
 const formItemLayout = {
@@ -50,16 +51,19 @@ function LoginForm(props: Props) {
           })(<Checkbox>记住密码</Checkbox>)}
           <a className="login-form-forgot" href="">
             忘记密码
-                  </a>
+          </a>
         </div>
-        <div>
-          Or <a href="javascript:;" onClick={() => {
+        {
+          props.type === 'worker' ? null : 
+          <div>
+          Or <a onClick={() => {
             props.changeStatus && props.changeStatus('reg');
           }}>快去注册!</a>
         </div>
+        }
       </Form.Item>
     </Form>
-  );
+  )
 }
 
 

@@ -73,7 +73,7 @@ export function LoginRegModal(props: Props) {
     >
     {
       action === 'login' ? 
-      <WrappedLoginForm  ref={(c)=> loginForm = c } changeStatus={changeStatusFunc}></WrappedLoginForm> : 
+      <WrappedLoginForm  ref={(c)=> loginForm = c } changeStatus={changeStatusFunc} type='patient'></WrappedLoginForm> : 
       <WrappedRegForm ref={(c)=> regForm = c } changeStatus={changeStatusFunc}></WrappedRegForm>
     }
   </Modal>

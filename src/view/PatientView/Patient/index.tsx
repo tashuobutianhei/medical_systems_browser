@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { DownOutlined, UserOutlined } from '@ant-design/icons';
 import { Layout, Menu, Avatar, Dropdown } from 'antd';
 import { Route, Switch, withRouter, Redirect, RouteComponentProps } from 'react-router-dom'
@@ -50,7 +50,7 @@ type PatientType = {
 function Patient (props: PatientType & RouteComponentProps) {
 
   let [LoginRegModalVisable, changLoginRegModalVisable] = useState<boolean>(false);
-
+  
   const logout = () => {
     jsCookie.remove('the_docters_token', {path: '/'});
     props.onLogout();
@@ -68,15 +68,15 @@ function Patient (props: PatientType & RouteComponentProps) {
     changLoginRegModalVisable(visable);
   }
   
-  const userInfo = props.user;
-
   let key = props.location.pathname.split('/')[2];
 
   return <>
   <LogRegFormModal 
     visible={LoginRegModalVisable} 
     toggleModalVisable={toggleModalVisable}
-    loginSuccess={props.onLogin}
+    loginSuccess={(userInfo) => {
+      props.onLogin(userInfo)
+    }}
   ></LogRegFormModal>
   <div id="particles-js"></div>
   <Layout className="layout">
@@ -100,12 +100,12 @@ function Patient (props: PatientType & RouteComponentProps) {
           <Menu.Item key="Guide">就医指南</Menu.Item>
           <div className="myvalue">
           {
-            userInfo && userInfo.username && userInfo.type === 1 ?
+             props.user &&  props.user.username &&  props.user.type == 1 ?
               <div>
                 <Avatar icon={<UserOutlined />}/>
                 <Dropdown overlay={menu} className="div">
                   <a className="ant-dropdown-link" href="#">
-                    <span>{userInfo.username}</span>
+                    <span>{ props.user.username}</span>
                     <DownOutlined />
                   </a>
                 </Dropdown>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {Button} from 'antd';
 
 
@@ -18,6 +18,7 @@ type Props = {
   type: number
 	path: string
 	user: any
+	onLogin: any
 }
 
 function HomeEnterCrad(props: Props & RouteComponentProps & RouteComponentProps) {
@@ -29,8 +30,9 @@ function HomeEnterCrad(props: Props & RouteComponentProps & RouteComponentProps)
   }
 
   const loginSuccess = (UserInfo: any) => {
-
-  }
+		props.onLogin(UserInfo);
+		window.location.href = '/Doctor';
+	}
 
   const enterCallback = () => {
 		// 需要鉴权
