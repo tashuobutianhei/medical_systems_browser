@@ -135,7 +135,7 @@ const patientCase = (state = patientCaseState, action) => {
           break;
         case 'set':
           hospitalListA = action.patientCaseInfo.length > 0 ? 
-          action.patientCaseInfo.length : hospitalListA;
+          action.patientCaseInfo : hospitalListA;
           break;
         default:
           break;

@@ -79,7 +79,7 @@ function DocterWorkTable (props: Props & RouteComponentProps) {
       'docterView': patientCase.docterView,
       'result': patientCase.result,
       'medicine': patientCase.medicine,
-      'Hospitalization': patientCase.HospitalizationId == '0' ? true : false
+      'Hospitalization': patientCase.HospitalizationId == '-1' ? false : true
     })
 
     const assayIds:any = await patientCaseClient.getAssayById({
@@ -368,7 +368,7 @@ function DocterWorkTable (props: Props & RouteComponentProps) {
       {
         
         props.patientCaseInfo.Hospitalization && mode !== 'doctor' ? 
-        <HospitalLIst mode={mode} examination={props.examination} hospitalList={[]}></HospitalLIst>
+        <HospitalLIst mode={mode} examination={props.examination} hospitalList={patientCase.hostList || []}></HospitalLIst>
         : null
       }
       <div className="workTable-col">

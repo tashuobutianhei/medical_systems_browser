@@ -92,13 +92,13 @@ function Doctor (props: userType & RouteComponentProps) {
     </Header>
     <Content className="doctor-content">
       <div className="doctor-route">
-      <Switch>
-          <Route path="/Doctor/Home" component={DoctorWork}/>
-          <Route path="/Doctor/Cases" component={DoctorCase} />
-          <Route path="/Doctor/Schedule" component={DoctorSchedule} />
-          {/* <Redirect to='/Doctor/Home'></Redirect> */}
-      </Switch>
-        </div>
+        <Switch>
+            <Route path="/Doctor/Home" component={DoctorWork}/>
+            <Route path="/Doctor/Cases" component={DoctorCase} />
+            <Route path="/Doctor/Schedule" component={DoctorSchedule} />
+            <Redirect to='/Doctor/Home'></Redirect>
+        </Switch>
+      </div>
     </Content>
     <Footer className="doctor-footer">The Docters medical systems ©2020 Created by lizilong @ 软件工程 2016 02</Footer>
   </Layout>

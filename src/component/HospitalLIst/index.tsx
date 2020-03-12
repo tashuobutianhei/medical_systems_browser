@@ -48,9 +48,18 @@ function DocterWorkTable (props: Props & RouteComponentProps) {
     if (Array.isArray(props.hospitalList)) {
       if (props.hospitalList.length > 0) {
           props.updatePatient(props.hospitalList.map(item => {
+            const assays = item.assayList && Array.isArray(item.assayList) &&
+            item.assayList.map((assay) => {
+              return {
+                assayId: assay.assayId,
+                examinationId: assay.assayName,
+                examinationResult: assay.assayResult,
+              }
+            })
             return {
               ...item,
-              'type': 'data'
+              'type': 'data',
+              assays,
             }
           }), '' ,'set');
       }
@@ -176,7 +185,7 @@ function DocterWorkTable (props: Props & RouteComponentProps) {
 
             <div className="workTable-hosptalItem">
                 {
-                hosItem.assays.map(assayItem => {
+                Array.isArray(hosItem.assays) && hosItem.assays.map(assayItem => {
                     return (
                     <Row key={assayItem.assayId} justify='space-between' className="workTable-formCol">
                         <Col>
