@@ -132,7 +132,7 @@ function DocterWorkTable (props: Props & RouteComponentProps) {
                       props.mode !== 'hospital' || hosItem.type === 'data'
                     }
                     onChange={(val) => {
-                      FormChangeHandle('recovery', val, hosItem.HospitalizationId);
+                      FormChangeHandle('recovery', val.target.value, hosItem.HospitalizationId);
                     }} defaultValue={hosItem.recovery}>
                       <Radio.Button value="0">未达到</Radio.Button>
                       <Radio.Button value="1">达到</Radio.Button>
@@ -195,7 +195,7 @@ function DocterWorkTable (props: Props & RouteComponentProps) {
                           disabled= {
                             props.mode !== 'hospital' || hosItem.type === 'data'
                           }
-                          defaultValue={assayItem.assayId.length >= 12 ? '' : assayItem.assayId}
+                          defaultValue={assayItem.assayId.length >= 12 ? '' : assayItem.examinationId}
                           onChange={(val)=>{
                             assaySelectChange(val, hosItem.HospitalizationId, assayItem.assayId);
                           }}>
