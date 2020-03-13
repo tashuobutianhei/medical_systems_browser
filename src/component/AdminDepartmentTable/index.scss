@@ -1,0 +1,10 @@
+.adminDepartmenTable {
+
+  &-noActive {
+    display: inline-block;
+    min-width: 100px;
+    padding: 1px;
+    border: 1px rgba(10,10,10,.3) groove;
+    cursor: pointer;
+  }
+}

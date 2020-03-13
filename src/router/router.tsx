@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import Home from '../view/Home/index';
 import Patient from '../view/PatientView/Patient/index';
 import Doctor from '../view/DoctoView/Doctor/index';
+import Admin from '../view/AdminView/Admin/index';
 
 import userClient from '../api/user';
 
@@ -44,8 +45,11 @@ function RootRoute(props: any & RouteComponentProps) {
   }, []);
 
   useEffect(() => {
-    if(props.user && props.user.workerId) {
+    if(props.user && props.user.workerId && props.user.type == 2) {
       props.history.push(`/Doctor`);
+    }
+    if(props.user && props.user.type == 0) {
+      props.history.push(`/Admin`);
     }
   }, [props.user]);
 
@@ -63,6 +67,15 @@ function RootRoute(props: any & RouteComponentProps) {
               <Redirect to="/Home" />
             )
           )} }/>
+      <Route path="/Admin" render={() => {
+        return (
+          props.user.type == 0
+          ? (
+          <Admin></Admin>
+        ) : (
+            <Redirect to="/Home" />
+          )
+        )} }/>
       <Redirect to='/Home'></Redirect>
     </Switch>
 	);

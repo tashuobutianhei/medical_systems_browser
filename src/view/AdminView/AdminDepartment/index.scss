@@ -1,0 +1,28 @@
+.adminDepartment {
+  width:  100%;
+
+  &-table { 
+    width: 90%;
+    float: right;
+  }
+
+  &-handle {
+    position: relative;
+
+
+    &-body {
+      position: fixed;
+      top: 50%;
+      left: 10px;
+      transform: translateX(-50%);
+      transform: translateY(-50%);
+
+      &-button {
+        display: block;
+
+        margin-bottom: 15px;
+        
+      }
+    }
+  }
+}

@@ -44,7 +44,7 @@ const homeList: Props[] = [{
   textColor: 'black',
   auth: true,
   type: 0,
-  path: 'Manager',
+  path: 'Admin',
 }]
 
 
