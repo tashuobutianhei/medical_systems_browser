@@ -26,6 +26,9 @@ const doctorClient =  {
     return get('/schedule/getScheduleOfPeriod',{
       departmentId
     })
+  },
+  getScheduleToday() {
+    return get('/schedule/today');
   }
 };
 
