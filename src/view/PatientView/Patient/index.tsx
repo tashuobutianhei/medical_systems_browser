@@ -12,6 +12,8 @@ import PatientHome from '../PatientHome';
 import Department from '../Department';
 import Order from '../Order';
 import Guide from '../Guide';
+import DoctorItem from '../DoctorItem';
+
 import {LoginRegModal as LogRegFormModal} from '../../../component/loginAndReg'
 import { userLogin, userLogout } from '../../../action/user';
 import tool from '../../../common/util';
@@ -131,6 +133,8 @@ function Patient (props: PatientType & RouteComponentProps) {
           <Route path="/Patient/docterInfo" component={DocterInfo} />
           <Route path="/Patient/department" component={Department}/>
           <Route path="/Patient/guide" component={Guide}/>
+
+          <Route path="/Patient/DoctorItem/:workerId" component={DoctorItem}/>
           <Redirect to='/Patient/Home'></Redirect>
         </Switch>
       </div>
