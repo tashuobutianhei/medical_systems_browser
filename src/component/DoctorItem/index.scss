@@ -1,0 +1,26 @@
+.doctorItem {
+  margin-top: 50px;
+  position: relative;
+  cursor: pointer;
+  img {
+    width: 100%;
+  }
+
+  div {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background-color: gray;
+    opacity: .7;
+    height: 60px;
+    color: white;
+    padding-top: 5px;
+
+    p {
+      text-align: center;
+      line-height: 10px;
+      font-weight: bolder;
+      font-size: 18px;
+    }
+  }
+}

@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { ForwardFilled, RightOutlined } from '@ant-design/icons';
-import { Carousel, Row, Col, Button, message, Statistic,BackTop } from 'antd';
 import { withRouter } from 'react-router-dom';
 import CONST from '../../../common/const';
 import {CSSTransition} from 'react-transition-group';
@@ -8,6 +6,10 @@ import { ClockCircleOutlined, HomeTwoTone, HeartTwoTone, ProfileTwoTone, IdcardT
 import departmentClient from '../../../api/department';
 import doctorClient from '../../../api/doctor';
 import patientCaseClient from '../../../api/patientCase';
+
+import { ForwardFilled, RightOutlined } from '@ant-design/icons';
+import { Carousel, Row, Col, Button, message, Statistic,BackTop } from 'antd';
+import DoctorItem from '../../../component/DoctorItem';
 
 import 'antd/dist/antd.css'
 import './index.scss'
@@ -259,15 +261,11 @@ function Home (props: any) {
             doctorToday.map(item => {
               return (
                 <Col span={4} key={item.workerId}>
-                  <div className="PatientHome-body-docter-img">
-                    <img src="/img/docter1.jpeg"></img>
-                    <div>
-                      <p>{item.name}</p>
-                      <p>{departmentList && departmentList.find(it => {
-                        return item.departmentId === it.departmentId
-                      }).departmentName}-{CONST.DOCTOR_POSITION[item.position]}</p>
-                    </div>
-                  </div>
+                  <DoctorItem departmentName={
+                    departmentList && departmentList.find(it => {
+                      return item.departmentId === it.departmentId
+                    }).departmentName
+                  } doctor={item}></DoctorItem>
                 </Col>
               )
             })
