@@ -34,16 +34,6 @@ const GudieList = [
     path: 'DocterInfo'
   }
 ]
-
-const docters = [
-  {
-    workerId: '1001',
-    name: 'lxx',
-    position: '主任',
-    departmentName: '内科'
-  }
-]
-
 function Home (props: any) {
 
   const [departmentList, setDepartmentList] = useState<any>([]); // 科室列表
