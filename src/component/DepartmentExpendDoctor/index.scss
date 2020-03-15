@@ -1,0 +1,39 @@
+.departmentCard {
+  border-radius: 10px;
+  border: 1px solid rgba(0,0,0,.2);
+  padding: 16px;
+  cursor: pointer;
+
+
+  &-title {
+    color:rgb(82, 142, 181);
+    font-size: 18px;
+    font-weight: 600;
+  }
+  
+  &-line {
+    width: 100%;
+    color: rgba(0,0,0,.5);
+    margin: 15px auto;
+   
+  }
+
+  &-name {
+    text-align: center;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  &-name:hover {
+    color: wheat;
+  }
+} 
+
+.departmentCard:hover {
+  color: white;
+  background-color:rgb(82, 142, 181);
+
+  .departmentCard-title {
+    color: white;
+  }
+}

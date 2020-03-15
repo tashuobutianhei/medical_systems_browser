@@ -1,0 +1,12 @@
+.department {
+  width: 70%;
+  margin: 30px auto;
+  box-shadow:rgb(204, 204, 204) 0px 0px 10px 0px;
+  padding: 10px;
+
+  &-title {
+    text-align: center;
+    font-size: 22px;
+    font-weight: bolder;
+  }
+}

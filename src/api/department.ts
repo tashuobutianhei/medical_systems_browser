@@ -2,8 +2,8 @@
 import {get, post} from '../common/client';
 
 const departmentlient =  {
-  getdepartments() {
-    return get('/department');
+  getdepartments(params: any = {}) {
+    return get('/department', params);
   },
   getExamination() {
     return get('/department/examination');

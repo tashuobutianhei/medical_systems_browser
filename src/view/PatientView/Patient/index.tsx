@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { DownOutlined, UserOutlined } from '@ant-design/icons';
 import { Layout, Menu, Avatar, Dropdown } from 'antd';
 import { Route, Switch, withRouter, Redirect, RouteComponentProps } from 'react-router-dom'
+import { ClockCircleOutlined, HomeTwoTone, HeartTwoTone, ProfileTwoTone, IdcardTwoTone, BarsOutlined, VerifiedOutlined, ArrowUpOutlined } from '@ant-design/icons';
+
 import { connect } from 'react-redux'
 
 import 'antd/dist/antd.css'
@@ -13,6 +15,7 @@ import Department from '../Department';
 import Order from '../Order';
 import Guide from '../Guide';
 import DoctorItem from '../DoctorItem';
+import DepartmentItem from '../DepartmentItem';
 
 import {LoginRegModal as LogRegFormModal} from '../../../component/loginAndReg'
 import { userLogin, userLogout } from '../../../action/user';
@@ -80,6 +83,32 @@ function Patient (props: PatientType & RouteComponentProps) {
       props.onLogin(userInfo)
     }}
   ></LogRegFormModal>
+        <div className="PatientHome-fixed">
+        <div className="PatientHome-fixed-item" onClick={() => {
+          props.history.push(`/Patient/Order`)
+        }}>
+          <span className="PatientHome-fixed-item-logo"><ClockCircleOutlined/></span>
+          <span className="PatientHome-fixed-item-text">预约挂号</span>
+        </div>
+        <div className="PatientHome-fixed-item" onClick={() => {
+          props.history.push(`/Patient/Guide`)
+        }}>
+          <span className="PatientHome-fixed-item-logo"><BarsOutlined/></span>
+          <span className="PatientHome-fixed-item-text">门诊查询</span>
+        </div>
+        <div className="PatientHome-fixed-item" onClick={() => {
+          props.history.push(`/Patient/Department`)
+        }}>
+          <span className="PatientHome-fixed-item-logo"><VerifiedOutlined/></span>
+          <span className="PatientHome-fixed-item-text">特色科室</span>
+        </div>
+        <div className="PatientHome-fixed-item">
+          <span className="PatientHome-fixed-item-logo"><ArrowUpOutlined /></span>
+          <span className="PatientHome-fixed-item-text">
+            <a href="#">返回顶部 </a>
+          </span>
+        </div>
+      </div>
   <div id="particles-js"></div>
   <Layout className="layout">
     <Header className="header">
@@ -135,6 +164,7 @@ function Patient (props: PatientType & RouteComponentProps) {
           <Route path="/Patient/guide" component={Guide}/>
 
           <Route path="/Patient/DoctorItem/:workerId" component={DoctorItem}/>
+          <Route path="/Patient/DepartmentItem/:departmentId" component={DepartmentItem}/>
           <Redirect to='/Patient/Home'></Redirect>
         </Switch>
       </div>

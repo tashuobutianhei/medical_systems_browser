@@ -1,18 +1,57 @@
-import React from 'react'
-// import { Layout, Menu, Avatar, BackTop, Dropdown, Icon } from 'antd';
-// import { Route, Switch, withRouter, Redirect } from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
+import adminClient from '../../../api/admin';
 
 import 'antd/dist/antd.css'
 import './index.scss'
-
-
-// const { Header, Content, Footer } = Layout;
-
+import { message, Row, Col, Breadcrumb } from 'antd';
+import DepartmentExpendDoctor from '../../../component/DepartmentExpendDoctor'
 
 
 function DocterInfo () {
+
+  const [info, setInfo] = useState<any>([]);
+
+  const fetchData = async () => {
+
+    const res:any = await adminClient.getDepartmentExpendDoctor();
+
+    if(res.code === 0) {
+      setInfo(res.data);
+    } else {
+      message.error({
+        content: '服务错误'
+      })
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  },[]);
+
   return (
-    <div>医生</div>
+    <div className="department">
+       <Breadcrumb>
+        <Breadcrumb.Item href="">
+          <span>首页</span>
+        </Breadcrumb.Item>
+        <Breadcrumb.Item>医生简介</Breadcrumb.Item>
+      </Breadcrumb>
+
+      <p className="department-title">医生简介</p>
+
+      <Row gutter={32}>
+        {
+          info && info.map(item => {
+            return (
+              <Col key={item.departmentId} span={6}>
+                <DepartmentExpendDoctor departmentInfo={item}>
+                </DepartmentExpendDoctor>
+              </Col>
+            )
+          })
+        }
+      </Row>
+    </div>
   );
 }
 
