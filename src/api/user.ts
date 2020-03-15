@@ -11,7 +11,11 @@ const userClient =  {
         userType
     })
   },
-
+  register(data) {
+    return post('/users/register', {
+      ...data
+    });
+  },
   getUser() {
     return get('/users/getUser');
   }

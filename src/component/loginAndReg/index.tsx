@@ -52,14 +52,48 @@ export function LoginRegModal(props: Props) {
           }
         })
       } else {
-        
+        message.error({
+          content: '信息不完善'
+        })
       }
-      
     })
   }
 
   const register = () =>  {
-
+    regForm.validateFields((err: any, values: any) => {
+      if(!err) {
+        const {username, password, name, idcard, sex, age, tel} = values;
+        userClient.register({
+          username,
+          password,
+          name,
+          idcard,
+          sex,
+          age,
+          tel
+        }).then((res) => {
+          const res2: any = res;
+          if(res2.code === 0) {
+            props.toggleModalVisable(false);
+            regForm.resetFields()
+            
+            message.success({
+              content: res2.message,
+              duration: 2,
+            });
+          } else {
+            message.error({
+              content: res2.message,
+              duration: 2,
+            });
+          }
+        })
+      } else {
+        message.error({
+          content: '信息不完善'
+        })
+      }
+    })
   }
 
   return(

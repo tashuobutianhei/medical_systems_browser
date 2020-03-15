@@ -107,7 +107,7 @@ function RegForm(props:Props) {
     </Form.Item>
     <Form.Item>
       <div>
-        Or <a href="javascript:;" onClick={() => {
+        Or <a onClick={() => {
             props.changeStatus('login');
           }}>快去登录!</a>
       </div>
