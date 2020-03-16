@@ -108,7 +108,7 @@ const AdminDepartment = (props: porpsType) => {
 function EditTable (props: any) {
 
   const deleteDoctor = async (workerId) => {
-    const res:any = await adminClient.outDocter({
+    const res:any = await adminClient.outDoctor({
       workerId,
     });
 

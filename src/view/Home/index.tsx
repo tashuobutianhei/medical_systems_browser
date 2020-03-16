@@ -31,7 +31,7 @@ const homeList: Props[] = [{
   path: 'Patient',
 }, {
   color: '#dac594',
-  imgUrl: 'docter',
+  imgUrl: 'doctor',
   enterText: '医生端',
   textColor: 'white',
   auth: true,

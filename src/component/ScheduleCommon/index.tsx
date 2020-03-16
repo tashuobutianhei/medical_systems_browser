@@ -95,7 +95,7 @@ function Schedule (props: any) {
   }
 
   async function getDoctors(params: any) {
-    const res:any =  await doctorClient.getDocters(params);
+    const res:any =  await doctorClient.getDoctors(params);
     if(res.code === 0) {
     // 医生列表
       setDctorList(res.data);
@@ -121,7 +121,7 @@ function Schedule (props: any) {
           if(it === undefined) {
             return {}
           }
-          obj[getRouteKey(it.data)] = it.docters && it.docters.split(',').map(doctor => {
+          obj[getRouteKey(it.data)] = it.doctors && it.doctors.split(',').map(doctor => {
             return {
               doctor: doctorList.find(doctorItem => doctorItem.workerId === doctor),
               wokrId: it.wokrId

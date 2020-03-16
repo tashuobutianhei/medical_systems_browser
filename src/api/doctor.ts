@@ -2,7 +2,7 @@
 import {get, post} from '../common/client';
 
 const doctorClient =  {
-  getDocters(params:any) {
+  getDoctors(params:any) {
     return get('/doctor',params);
   },
   createWorkList(departmentId: string | number) {

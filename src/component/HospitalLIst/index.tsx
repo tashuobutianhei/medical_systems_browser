@@ -43,7 +43,7 @@ type hospitalType = {
   date: Date
 }
 
-function DocterWorkTable (props: Props & RouteComponentProps) {
+function DoctorWorkTable (props: Props & RouteComponentProps) {
   useEffect(() => {
     if (Array.isArray(props.hospitalList)) {
       if (props.hospitalList.length > 0) {
@@ -274,5 +274,5 @@ export default withRouter(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  )(DocterWorkTable)
+  )(DoctorWorkTable)
 );

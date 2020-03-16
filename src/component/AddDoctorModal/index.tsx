@@ -33,7 +33,7 @@ const Demo = (props: propsType) => {
   }
 
   const onFinish = async (values) => {
-    const res:any = await adminClient.addDocter(values);
+    const res:any = await adminClient.addDoctor(values);
     if(res.code === 0 ) {
       message.success({
         content: '添加成功'

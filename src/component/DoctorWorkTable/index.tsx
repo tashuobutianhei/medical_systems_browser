@@ -27,7 +27,7 @@ type assayType = {
   examinationResult: string
 }
 
-function DocterWorkTable (props: Props & RouteComponentProps) {
+function DoctorWorkTable (props: Props & RouteComponentProps) {
 
   const [mode, setMode] = useState<string>('');
   const [patientCase, setPatientCase] = useState<any>({});
@@ -76,12 +76,15 @@ function DocterWorkTable (props: Props & RouteComponentProps) {
 
   const initHooksVal = async (patientCase: any) => {
     props.updatePatient({
-      'docterView': patientCase.docterView,
+      'doctorView': patientCase.doctorView,
       'result': patientCase.result,
       'medicine': patientCase.medicine,
       'Hospitalization': patientCase.HospitalizationId == '-1' ? false : true
     })
 
+    if (patientCase.assayId.length === 0) {
+      return;
+    }
     const assayIds:any = await patientCaseClient.getAssayById({
       'assayIds' : patientCase.assayId.split(',').filter((item: string) => item != '').join(','),
     })
@@ -133,15 +136,17 @@ function DocterWorkTable (props: Props & RouteComponentProps) {
   }
 
   const postDoctor = async (caseId: any) => {
-    const {docterView, result, medicine, Hospitalization, assay} = props.patientCaseInfo;
+    const {doctorView, result, medicine, Hospitalization, assay} = props.patientCaseInfo;
       
     const res:any = await patientCaseClient.setPatientCaseModeDoctor({
-      docterView,
+      doctorView,
       result,
       medicine,
-      'HospitalizationId': Hospitalization ? 1 : 0,
+      'Hospitalization': Hospitalization ? 0 : -1,
       'caseId': caseId.caseId,
-      assay: JSON.stringify(assay),
+      assay: JSON.stringify(assay.filter(assayItem => {
+        return assayItem.examinationId !== null;
+      })),
     });
 
     if (res.code === 0) {
@@ -248,9 +253,9 @@ function DocterWorkTable (props: Props & RouteComponentProps) {
             allowClear={true} 
             disabled={mode !== 'doctor'}
             placeholder="请您填入您对病情的描述"
-            value={props.patientCaseInfo.docterView}
+            value={props.patientCaseInfo.doctorView}
             onChange={(val) => {
-              FormChangeHandle('docterView', val.target.value);
+              FormChangeHandle('doctorView', val.target.value);
             }}></TextArea>
           </div>
         </div>
@@ -410,5 +415,5 @@ export default withRouter(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  )(DocterWorkTable)
+  )(DoctorWorkTable)
 );

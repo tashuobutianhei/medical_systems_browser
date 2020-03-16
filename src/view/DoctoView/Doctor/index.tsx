@@ -100,7 +100,7 @@ function Doctor (props: userType & RouteComponentProps) {
         </Switch>
       </div>
     </Content>
-    <Footer className="doctor-footer">The Docters medical systems ©2020 Created by lizilong @ 软件工程 2016 02</Footer>
+    <Footer className="doctor-footer">The Doctors medical systems ©2020 Created by lizilong @ 软件工程 2016 02</Footer>
   </Layout>
   </>;
 }

@@ -51,7 +51,7 @@ function DepartmentItem (props: any) {
       })
     }
 
-    const doctorList:any = await doctorClient.getDocters({
+    const doctorList:any = await doctorClient.getDoctors({
       departmentId: props.match.params.departmentId
     });
 

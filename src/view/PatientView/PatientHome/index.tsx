@@ -33,7 +33,7 @@ const GudieList = [
     name: '值班医师',
     color: '#306f3d',
     textColor: 'white',
-    path: 'DocterInfo'
+    path: 'DoctorInfo'
   }
 ]
 function Home (props: any) {
@@ -56,7 +56,7 @@ function Home (props: any) {
       })
     }
 
-    const doctorList:any = await doctorClient.getDocters({});
+    const doctorList:any = await doctorClient.getDoctors({});
 
     if(doctorList.code === 0) {
       setDoctorList(doctorList.data);
@@ -90,8 +90,8 @@ function Home (props: any) {
   const reduceTodaySchedule = (todaySchedule) => {
     let TodaySchedule = [];
     todaySchedule && todaySchedule.forEach(item => {
-      if(item.docters) {
-        TodaySchedule.push(...item.docters.split(','));
+      if(item.doctors) {
+        TodaySchedule.push(...item.doctors.split(','));
       } 
     });
     return TodaySchedule;
@@ -110,8 +110,8 @@ function Home (props: any) {
 
       let arrayWork = []
       todaySchedule.forEach(item => {
-        if(item.docters) {
-          arrayWork.push(...item.docters.split(','));
+        if(item.doctors) {
+          arrayWork.push(...item.doctors.split(','));
         } 
       });
 
@@ -227,8 +227,8 @@ function Home (props: any) {
         </Row>
       </div>
 
-      <div className="PatientHome-body-docter">
-        <p className="PatientHome-body-docter-gudie"  onClick={()=>{
+      <div className="PatientHome-body-doctor">
+        <p className="PatientHome-body-doctor-gudie"  onClick={()=>{
           props.history.push(`/Patient/Department`)}
         }>
           今日医师

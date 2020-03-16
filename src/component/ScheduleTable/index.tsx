@@ -24,7 +24,7 @@ function ScheduleTable(props: {departmentId: string, user: any} & any) {
 
   // 获得科室医生列表
   async function getDoctors(params: any) {
-    const res:any =  await doctorClient.getDocters(params);
+    const res:any =  await doctorClient.getDoctors(params);
     if(res.code === 0) {
       doctors = res.data;
     // 医生状态列表
@@ -52,7 +52,7 @@ function ScheduleTable(props: {departmentId: string, user: any} & any) {
         time: CONST.WORK_SHIFTS_TIME[item.shifts],
         editer: item.editer,
         add: '10.3.4.5654',
-        doctors: item.docters,
+        doctors: item.doctors,
         addStatus: false,
       });
     })

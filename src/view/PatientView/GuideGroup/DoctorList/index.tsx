@@ -28,7 +28,7 @@ function DoctorList () {
       })
     }
 
-    const doctorList:any = await doctorClient.getDocters({});
+    const doctorList:any = await doctorClient.getDoctors({});
 
     if(doctorList.code === 0) {
       setDoctorList(doctorList.data);
@@ -54,8 +54,8 @@ function DoctorList () {
     if (todaySchedule.length > 0 && doctorList.length > 0) {
       let arrayWork = []
       todaySchedule.forEach(item => {
-        if(item.docters) {
-          arrayWork.push(...item.docters.split(','));
+        if(item.doctors) {
+          arrayWork.push(...item.doctors.split(','));
         } 
       });
 

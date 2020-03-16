@@ -11,7 +11,7 @@ type propsType = {
   departmentInfo: any
 }
 
-function DocterInfo (props: propsType & RouteComponentProps) {
+function DoctorInfo (props: propsType & RouteComponentProps) {
 
   const [doctorList, setDoctorList] = useState<any>([]);
 
@@ -64,4 +64,4 @@ function DocterInfo (props: propsType & RouteComponentProps) {
   );
 }
 
-export default withRouter(DocterInfo);
+export default withRouter(DoctorInfo);

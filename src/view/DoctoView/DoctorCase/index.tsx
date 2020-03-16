@@ -5,7 +5,7 @@ import { RouteComponentProps, withRouter, Route, Switch } from 'react-router-dom
 import patientCaseClient from '../../../api/patientCase';
 import departmentClient from '../../../api/department';
 import { CalendarOutlined, UnorderedListOutlined} from '@ant-design/icons';
-import DocterWorkTable from '../../../component/DocterWorkTable'
+import DoctorWorkTable from '../../../component/DoctorWorkTable'
 
 import 'antd/dist/antd.css'
 import './index.scss'
@@ -13,7 +13,7 @@ import './index.scss'
 const { Content, Sider } = Layout;
 const { SubMenu } = Menu;
 
-function DocterInfo (props: any & RouteComponentProps) {
+function DoctorInfo (props: any & RouteComponentProps) {
 
   const [patientCases, setPatientCases] = useState<any>({});
   const [examination, setExaminationRes] = useState<any>({});
@@ -83,7 +83,7 @@ function DocterInfo (props: any & RouteComponentProps) {
           <Switch>
               <Route exact path="/Doctor/Cases/:caseId" component={() => {
                 return(
-                  <DocterWorkTable patientCase={patientCases} examination={examination}></DocterWorkTable>
+                  <DoctorWorkTable patientCase={patientCases} examination={examination}></DoctorWorkTable>
                 )
               }} ></Route>
           </Switch>
@@ -102,5 +102,5 @@ const mapStateToProps = (state: { user: any; }) => {
 export default withRouter(
   connect(
     mapStateToProps,
-  )(DocterInfo)
+  )(DoctorInfo)
 );

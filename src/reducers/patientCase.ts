@@ -19,7 +19,7 @@ type hospitalType = {
 }
 
 type patientCase = {
-  docterView: string,
+  doctorView: string,
   result: string
   medicine: string
   Hospitalization: boolean
@@ -29,7 +29,7 @@ type patientCase = {
 
 
 const patientCaseState: patientCase = {
-  docterView: '',
+  doctorView: '',
   result: '',
   medicine: '',
   Hospitalization: false,

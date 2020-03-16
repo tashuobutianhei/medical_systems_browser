@@ -8,14 +8,14 @@ const adminClient =  {
   addDepartment(data) {
     return post('/admin/department', data);
   },
-  addDocter(data) {
-    return post('/admin/docters', data);
+  addDoctor(data) {
+    return post('/admin/doctors', data);
   },
-  outDocter(data) {
-    return post('/admin/docters', data, 'delete');
+  outDoctor(data) {
+    return post('/admin/doctors', data, 'delete');
   },  
   deleteDepartment(data) {
-    return post('/admin/docters', data, 'delete');
+    return post('/admin/doctors', data, 'delete');
   }
 };
 

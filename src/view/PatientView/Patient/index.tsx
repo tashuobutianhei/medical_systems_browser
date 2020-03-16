@@ -9,7 +9,7 @@ import { connect } from 'react-redux'
 import 'antd/dist/antd.css'
 import './index.scss'
 
-import DocterInfo from '../DocterInfo';
+import DoctorInfo from '../DoctorInfo';
 import PatientHome from '../PatientHome';
 import Department from '../Department';
 import Order from '../Order';
@@ -127,7 +127,7 @@ function Patient (props: PatientType & RouteComponentProps) {
           <Menu.Item key="Home">首页</Menu.Item>
           <Menu.Item key="Order">医疗挂号</Menu.Item>
           <Menu.Item key="Department">科室导航</Menu.Item>
-          <Menu.Item key="DocterInfo">医生介绍</Menu.Item>
+          <Menu.Item key="DoctorInfo">医生介绍</Menu.Item>
           <Menu.Item key="Guide">就医指南</Menu.Item>
           <div className="myvalue">
           {
@@ -159,7 +159,7 @@ function Patient (props: PatientType & RouteComponentProps) {
       <Switch> 
           <Route exact path="/Patient/Home" component={PatientHome}/>
           <Route path="/Patient/order" component={Order} />
-          <Route path="/Patient/docterInfo" component={DocterInfo} />
+          <Route path="/Patient/doctorInfo" component={DoctorInfo} />
           <Route path="/Patient/department" component={Department}/>
           <Route path="/Patient/guide" component={Guide}/>
 
@@ -169,7 +169,7 @@ function Patient (props: PatientType & RouteComponentProps) {
         </Switch>
       </div>
     </Content>
-    <Footer className="patient-footer">The Docters medical systems ©2020 Created by lizilong @ 软件工程 2016 02</Footer>
+    <Footer className="patient-footer">The Doctors medical systems ©2020 Created by lizilong @ 软件工程 2016 02</Footer>
   </Layout>
   </>;
 }

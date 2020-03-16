@@ -7,7 +7,7 @@ import { message, Row, Col, Breadcrumb } from 'antd';
 import DepartmentExpendDoctor from '../../../component/DepartmentExpendDoctor'
 
 
-function DocterInfo () {
+function DoctorInfo () {
 
   const [info, setInfo] = useState<any>([]);
 
@@ -55,4 +55,4 @@ function DocterInfo () {
   );
 }
 
-export default DocterInfo
+export default DoctorInfo

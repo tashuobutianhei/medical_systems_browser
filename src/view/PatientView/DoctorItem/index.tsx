@@ -27,7 +27,7 @@ function DoctorItem (props: any) {
       })
     }
 
-    const doctorList:any = await doctorClient.getDocters({
+    const doctorList:any = await doctorClient.getDoctors({
       workerId: props.match.params.workerId
     });
 
@@ -69,7 +69,7 @@ function DoctorItem (props: any) {
 
       <Row  className="DoctorItem-body" gutter={32}>
         <Col span={6}>
-          <img src="/img/docter1.jpeg"></img>
+          <img src="/img/doctor1.jpeg"></img>
         </Col>
         <Col span={18}>
           <Row>

@@ -16,10 +16,10 @@ export type patientInfo = {
 type patientCase = {
     uid: string // 用户
     caseId: string
-    docterId: string // 诊治医生
+    doctorId: string // 诊治医生
     registerDate: string // 病例日期
     describe: string // 患者描述
-    docterView: string // 医生检查描述
+    doctorView: string // 医生检查描述
     assay: [ // 化验信息
         {
             assayName: string, // 化验名称

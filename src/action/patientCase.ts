@@ -16,7 +16,7 @@ type hospitalType = {
 }
 
 type patientCase = {
-  docterView: string,
+  doctorView: string,
   result: string
   medicine: string
   Hospitalization: boolean

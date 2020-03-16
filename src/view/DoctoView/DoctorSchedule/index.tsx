@@ -12,7 +12,7 @@ import './index.scss'
 const { Content, Sider } = Layout;
 const { SubMenu } = Menu;
 
-function DocterInfo (props: any & RouteComponentProps) {
+function DoctorInfo (props: any & RouteComponentProps) {
 
   // 获得近六天的list
   const getScheduleDateList = () => {
@@ -107,5 +107,5 @@ const mapStateToProps = (state: { user: any; }) => {
 export default withRouter(
   connect(
     mapStateToProps,
-  )(DocterInfo)
+  )(DoctorInfo)
 );

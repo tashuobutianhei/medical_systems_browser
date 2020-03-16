@@ -39,8 +39,7 @@ function Order (props: any) {
   const [order, setOrder] = useState<any>({})
 
   const nextStep = (params: any) => {
-    console.log(props.user)
-    if(!(props.user && props.user.type === 1)) {
+    if(!(props.user && props.user.type == 1)) {
       message.error({
         content: '挂号请先登陆'
       })
