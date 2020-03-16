@@ -93,7 +93,7 @@ function OrderModal(props: Props){
           color: order.limit === order.patientCases && order.limit !== null? 'red' : 'black'
           }}>
           <Col span={10}>
-            <span>当前已挂</span>: {order.patientCases ? order.patientCases.split(',').length : 0}
+            <span>当前已挂</span>: {order.patientCases ? order.patientCases.length : 0}
           </Col>
           <Col span={10}>
             <span>门诊上限</span>: {order.limit ? order.limit : '暂无上限'}
