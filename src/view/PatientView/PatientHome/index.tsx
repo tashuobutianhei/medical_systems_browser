@@ -132,9 +132,6 @@ function Home (props: any) {
 
   return (
     <div className="PatientHome">
-
-
-
       <Carousel autoplay={true} effect="fade" className="PatientHome-Carousel">
         {
           CarouselList.map(item => {

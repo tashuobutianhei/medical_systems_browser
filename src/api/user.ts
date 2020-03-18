@@ -18,8 +18,10 @@ const userClient =  {
   },
   getUser() {
     return get('/users/getUser');
+  },
+  updata(data) {
+    return post('/user', data, 'PUT');
   }
-
 };
 
 export default userClient;

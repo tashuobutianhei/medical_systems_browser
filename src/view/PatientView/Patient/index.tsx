@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { DownOutlined, UserOutlined } from '@ant-design/icons';
 import { Layout, Menu, Avatar, Dropdown } from 'antd';
 import { Route, Switch, withRouter, Redirect, RouteComponentProps } from 'react-router-dom'
-import { ClockCircleOutlined, HomeTwoTone, HeartTwoTone, ProfileTwoTone, IdcardTwoTone, BarsOutlined, VerifiedOutlined, ArrowUpOutlined } from '@ant-design/icons';
+import { ClockCircleOutlined, BarsOutlined, VerifiedOutlined, ArrowUpOutlined } from '@ant-design/icons';
 
 import { connect } from 'react-redux'
 
@@ -16,24 +16,19 @@ import Order from '../Order';
 import Guide from '../Guide';
 import DoctorItem from '../DoctorItem';
 import DepartmentItem from '../DepartmentItem';
+import User from '../User';
 
 import {LoginRegModal as LogRegFormModal} from '../../../component/loginAndReg'
 import { userLogin, userLogout } from '../../../action/user';
-import tool from '../../../common/util';
 import jsCookie from 'js-cookie';
-import part from '../../../common/part'
-
-
 
 const { Header, Content, Footer } = Layout;
-
 
 const mapStateToProps = (state: { user: any; }) => {
   return {
     user: state.user
   }
 }
-
 
 const mapDispatchToProps = (dispatch: (arg0: { type: string; userInfo?: any; }) => void) => {
   return {
@@ -64,7 +59,9 @@ function Patient (props: PatientType & RouteComponentProps) {
 
   const menu = (
     <Menu>
-      <Menu.Item key="my" >个人中心</Menu.Item>
+      <Menu.Item key="my" onClick={() => {
+        props.history.push('/Patient/user')
+      }}>个人中心</Menu.Item>
       <Menu.Item key="logout" onClick={logout}>退出登录</Menu.Item>
     </Menu>
   );
@@ -163,6 +160,8 @@ function Patient (props: PatientType & RouteComponentProps) {
           <Route path="/Patient/department" component={Department}/>
           <Route path="/Patient/guide" component={Guide}/>
 
+          <Route path="/Patient/user" component={User}/>
+  
           <Route path="/Patient/DoctorItem/:workerId" component={DoctorItem}/>
           <Route path="/Patient/DepartmentItem/:departmentId" component={DepartmentItem}/>
           <Redirect to='/Patient/Home'></Redirect>
