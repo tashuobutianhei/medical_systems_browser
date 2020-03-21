@@ -17,7 +17,7 @@ function DoctorList (props: propsType & RouteComponentProps) {
     <div className="doctorItem" onClick={() => {
       props.history.push(`/Patient/DoctorItem/${doctor.workerId}`)
     }}>
-      <img src="/img/doctor1.jpeg"></img>
+      <img src={doctor.avatar ? `http://localhost:3000${doctor.avatar}`: '/img/doctor1.jpeg'}></img>
       <div>
         <p>{doctor.name}</p>
         <p>{departmentName}-{CONST.DOCTOR_POSITION[doctor.position]}</p>

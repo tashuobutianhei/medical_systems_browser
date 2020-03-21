@@ -10,6 +10,7 @@ import jsCookie from 'js-cookie';
 import DoctorCase from '../DoctorCase/index';
 import DoctorWork from '../DoctorWork/index';
 import DoctorSchedule from '../DoctorSchedule/index';
+import DoctorInfo from '../User/index';
 
 import 'antd/dist/antd.css'
 import './index.scss'
@@ -48,7 +49,9 @@ function Doctor (props: userType & RouteComponentProps) {
 
   const menu = (
     <Menu>
-      <Menu.Item key="my" >个人中心</Menu.Item>
+      <Menu.Item key="my" onClick={() => {
+        props.history.push('/Doctor/User');
+      }}>个人中心</Menu.Item>
       <Menu.Item key="logout" onClick={logout}>退出登录</Menu.Item>
     </Menu>
   );
@@ -80,7 +83,7 @@ function Doctor (props: userType & RouteComponentProps) {
             <Menu.Item key="Schedule">排班</Menu.Item>: null
           }
           <div className="myvalue">
-            <Avatar icon={<UserOutlined />}/>
+            <Avatar src={ userInfo.avatar ? `http://localhost:3000${userInfo.avatar}`: '' }/>
             <Dropdown overlay={menu} className="div">
               <a className="ant-dropdown-link" href="#">
                 <span>{userInfo.name}</span>
@@ -96,6 +99,8 @@ function Doctor (props: userType & RouteComponentProps) {
             <Route path="/Doctor/Home" component={DoctorWork}/>
             <Route path="/Doctor/Cases" component={DoctorCase} />
             <Route path="/Doctor/Schedule" component={DoctorSchedule} />
+
+            <Route path="/Doctor/User" component={DoctorInfo} />
             <Redirect to='/Doctor/Home'></Redirect>
         </Switch>
       </div>

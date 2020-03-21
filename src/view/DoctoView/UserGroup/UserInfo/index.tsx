@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import { message, Upload, Button, Input, Radio, Avatar, Row, Col } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
-import userClient from '../../../../api/user';
 import { UserOutlined } from '@ant-design/icons';
+import { connect } from 'react-redux';
+import { userLogout, userLogin } from '../../../../action/user';
+import CONST from '../../../../common/const';
 import jsCookie from 'js-cookie';
+import userClient from '../../../../api/user';
+import departmentClient from '../../../../api/department';
 
 import 'antd/dist/antd.css'
 import './index.scss'
-import { connect } from 'react-redux';
-import { userLogout, userLogin } from '../../../../action/user';
+
 
 function getBase64(img, callback) {
   const reader = new FileReader();
@@ -34,6 +36,26 @@ function User (props: any) {
   const [imageUrl, setImageUrl] = useState<any>('');
 
   const [passwordCount, setPasswordCount] = useState<number>(0);
+
+
+  const [departmentList, setDepartmentList] = useState<any>([]); // 科室列表
+  const [departmentName, setDepartmentName] = useState<string>('');
+
+
+  const fetchData = async () => {
+    const departmentList:any = await departmentClient.getdepartments();
+    if(departmentList.code === 0) {
+      setDepartmentList(departmentList.data);
+    } else {
+      message.error({
+        content: '服务错误'
+      })
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  },[]);
 
   const check = () => {
     let check = true;
@@ -72,6 +94,12 @@ function User (props: any) {
     userInfo.address != props.user.address && Object.assign(transform, {
       address:userInfo.address
     });
+    userInfo.information != props.user.information && Object.assign(transform, {
+      information: userInfo.information
+    });
+    userInfo.university != props.user.university && Object.assign(transform, {
+      university: userInfo.university
+    });
     imageUrl && Object.assign(transform, {
       avatar: imageUrl
     });
@@ -106,7 +134,7 @@ function User (props: any) {
   const reset = () => {
     setuserInfo({
       ...userInfo,
-      password: '1234567',
+      password: '',
       passAgain: '',
       tel: props.user.tel,
       address: props.user.address,
@@ -126,18 +154,28 @@ function User (props: any) {
     setuserInfo(newObj);
   }
 
+  
+
   useEffect(() => {
     if(Object.keys(props.user).length > 0) {
       setuserInfo({...props.user, password: '1234567'});
     }
   },[props.user])
 
+  useEffect(() => {
+    if(Object.keys(props.user).length > 0 && departmentList.length > 0) {
+      setDepartmentName(departmentList.find(item => {
+        return userInfo.departmentId === item.departmentId
+      }).departmentName)
+    }
+  }, [departmentList, props.user]);
+
   return (
     <div>
       <div className="userInfo">
         <div className="userInfo-item">
-          <label>用户id</label>
-          <Input disabled value={userInfo && userInfo.uid}></Input>
+          <label>工号</label>
+          <Input disabled value={userInfo && userInfo.workerId}></Input>
         </div>
         <div className="userInfo-item">
           <label>姓名</label>
@@ -147,10 +185,27 @@ function User (props: any) {
           <label>身份证号码</label>
           <Input disabled value={userInfo && userInfo.idcard}></Input>
         </div>
+        
         <div className="userInfo-item">
-          <label>用户名</label>
-          <Input disabled value={userInfo && userInfo.username}></Input>
+          <label>科室</label>
+          <Input disabled value={departmentName}></Input>
         </div>
+        <div className="userInfo-item">
+          <label>职位</label>
+          <Input disabled value={CONST.DOCTOR_POSITION[userInfo && userInfo.position]}></Input>
+        </div>
+        <div className="userInfo-item">
+          <label>毕业院校</label>
+          <Input disabled={mode === 'data'} value={userInfo && userInfo.university}
+           onChange={(e)=>{onchange('university', e.target.value)}}></Input>
+        </div>
+
+        <div className="userInfo-item">
+          <label>自我介绍</label>
+          <Input.TextArea disabled={mode === 'data'} value={userInfo && userInfo.information} 
+           onChange={(e)=>{onchange('information', e.target.value)}}/>
+        </div>
+
         <div className="userInfo-item">
           <label>密码</label>
           <Input.Password disabled={mode === 'data'} 
