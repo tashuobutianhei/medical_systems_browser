@@ -130,7 +130,7 @@ function Patient (props: PatientType & RouteComponentProps) {
           {
              props.user &&  props.user.username &&  props.user.type == 1 ?
               <div>
-                <Avatar icon={<UserOutlined />}/>
+                <Avatar src={props.user.avatar ? `http://localhost:3000${props.user.avatar}` : ''}/>
                 <Dropdown overlay={menu} className="div">
                   <a className="ant-dropdown-link" href="#">
                     <span>{ props.user.username}</span>

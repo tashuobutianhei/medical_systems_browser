@@ -21,7 +21,7 @@ const initCol = [
           rowSpan: 1
         },
       };
-      if (index === 0 || index/3 === 1) {
+      if (index === 0 || index%3 === 0) {
         obj.props.rowSpan = 3;
       } else {
         obj.props.rowSpan = 0;

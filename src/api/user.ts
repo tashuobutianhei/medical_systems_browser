@@ -20,7 +20,7 @@ const userClient =  {
     return get('/users/getUser');
   },
   updata(data) {
-    return post('/user', data, 'PUT');
+    return post('/users', data, 'PUT');
   }
 };
 
