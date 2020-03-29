@@ -1,17 +1,15 @@
 import React, { useState, useEffect } from 'react'
-// import { Layout, Menu, Avatar, BackTop, Dropdown, Icon } from 'antd';
-// import { Route, Switch, withRouter, Redirect } from 'react-router-dom'
 import { message, Row, Col } from 'antd';
 import DoctorItem from '../../../../component/DoctorItem';
+import { graphql } from 'react-apollo';
+import { fetchInfoALLGQL } from '../../../../api/graphql/gql';
 
 import doctorClient from '../../../../api/doctor';
-import departmentClient from '../../../../api/department';
-
 
 import 'antd/dist/antd.css'
 import './index.scss'
 
-function DoctorList () {
+function DoctorList (props:any) {
   const [doctorList, setDoctorList] = useState<any>([]); //医生列表
   const [todaySchedule, setTodaySchedule] = useState<any>([]); // 今日排班计划
   const [doctorToday, setDoctorToday] = useState<any>([]);// 今日值班医生列表
@@ -19,25 +17,6 @@ function DoctorList () {
 
 
   const fetchData = async() => {
-    const departmentList:any = await departmentClient.getdepartments();
-    if(departmentList.code === 0) {
-      setDepartmentList(departmentList.data);
-    } else {
-      message.error({
-        content: '服务错误'
-      })
-    }
-
-    const doctorList:any = await doctorClient.getDoctors({});
-
-    if(doctorList.code === 0) {
-      setDoctorList(doctorList.data);
-    } else {
-      message.error({
-        content: '服务错误'
-      })
-    }
-
     const todaySchedule:any = await doctorClient.getScheduleToday();
 
     if(todaySchedule.code === 0) {
@@ -74,6 +53,20 @@ function DoctorList () {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    if(props.data && props.data.Info) {
+      const data = props.data.Info;
+      setDepartmentList(data.departmentInfoList);
+
+      let midArray = [];
+      data.departmentInfoList.forEach(item => {
+        midArray = [...midArray, ...item.doctorList]
+      });
+
+      setDoctorList(midArray);
+    }
+  }, [props]);
+  
   return (
     <Row className="DoctorList" gutter={16}>
       {
@@ -93,4 +86,10 @@ function DoctorList () {
   );
 }
 
-export default DoctorList
+export default graphql(fetchInfoALLGQL, {
+  options() {
+    return {
+      fetchPolicy: 'cache-and-network',
+    };
+  } 
+})(DoctorList)

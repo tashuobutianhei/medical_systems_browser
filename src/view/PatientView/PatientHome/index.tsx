@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { withRouter } from 'react-router-dom';
 import CONST from '../../../common/const';
 import {CSSTransition} from 'react-transition-group';
-import { ClockCircleOutlined, HomeTwoTone, HeartTwoTone, ProfileTwoTone, IdcardTwoTone, BarsOutlined, VerifiedOutlined, ArrowUpOutlined } from '@ant-design/icons';
+import { HomeTwoTone, HeartTwoTone, ProfileTwoTone, IdcardTwoTone, } from '@ant-design/icons';
 import departmentClient from '../../../api/department';
 import doctorClient from '../../../api/doctor';
 import patientCaseClient from '../../../api/patientCase';
@@ -10,6 +10,9 @@ import patientCaseClient from '../../../api/patientCase';
 import { ForwardFilled, RightOutlined } from '@ant-design/icons';
 import { Carousel, Row, Col, Button, message, Statistic,BackTop } from 'antd';
 import DoctorItem from '../../../component/DoctorItem';
+
+import { graphql } from 'react-apollo';
+import { fetchInfoALLGQL } from '../../../api/graphql/gql';
 
 import 'antd/dist/antd.css'
 import './index.scss'
@@ -47,24 +50,6 @@ function Home (props: any) {
   const [doctorToday, setDoctorToday] = useState<any>([]);// 今日值班医生列表
 
   const fetchData = async() => {
-    const departmentList:any = await departmentClient.getdepartments();
-    if(departmentList.code === 0) {
-      setDepartmentList(departmentList.data);
-    } else {
-      message.error({
-        content: '服务错误'
-      })
-    }
-
-    const doctorList:any = await doctorClient.getDoctors({});
-
-    if(doctorList.code === 0) {
-      setDoctorList(doctorList.data);
-    } else {
-      message.error({
-        content: '服务错误'
-      })
-    }
 
     const patientCaseList:any = await patientCaseClient.getPatientAll();
 
@@ -129,6 +114,20 @@ function Home (props: any) {
   useEffect(()=> {
     fetchData();
   }, []);
+
+  useEffect(() => {
+    if(props.data && props.data.Info) {
+      const data = props.data.Info;
+      setDepartmentList(data.departmentInfoList);
+
+      let midArray = [];
+      data.departmentInfoList.forEach(item => {
+        midArray = [...midArray, ...item.doctorList]
+      });
+
+      setDoctorList(midArray);
+    }
+  }, [props]);
 
   return (
     <div className="PatientHome">
@@ -252,4 +251,10 @@ function Home (props: any) {
   );
 }
 
-export default withRouter(Home)
+export default graphql(fetchInfoALLGQL, {
+  options() {
+    return {
+      fetchPolicy: 'cache-and-network',
+    };
+  } 
+})(withRouter(Home));

@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Route, Switch, Redirect, RouteComponentProps, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux'
+import jsCookie from 'js-cookie';
 
 import Home from '../view/Home/index';
 import Patient from '../view/PatientView/Patient/index';
@@ -14,6 +15,7 @@ import { userLogin, userLogout } from '../action/user'
 
 import 'antd/dist/antd.css';
 import './router.scss';
+import { message } from 'antd';
 
 const mapStateToProps = (state: { user: any; }) => {
   return {
@@ -40,7 +42,10 @@ function RootRoute(props: any & RouteComponentProps) {
       const myRes: any = res
       if(myRes.code === 0) {
         props.onLogin(myRes.data.user);
-      }
+      } else if (myRes.code === 1000) {
+        message.info('登陆已过期，请重写登陆');
+        jsCookie.remove('the_docters_token', {path: '/'});
+      };
     });
   }, []);
 

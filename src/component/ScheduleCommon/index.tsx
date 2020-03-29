@@ -148,7 +148,9 @@ function Schedule (props: any) {
   useEffect(() => {
     if(doctorList.length > 0 &&
       props.departmentList.length > 0 &&
-      Object.keys(props.departmentList[0]).length > 0) {
+      Object.keys(props.departmentList[0]).length > 0 &&
+      props.departmentList[0].departmentId
+      ) {
       fetchSchedule();
     }
   }, [doctorList, props.departmentList]);
