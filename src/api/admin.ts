@@ -15,7 +15,7 @@ const adminClient =  {
     return post('/admin/doctors', data, 'delete');
   },  
   deleteDepartment(data) {
-    return post('/admin/doctors', data, 'delete');
+    return post('/admin/department', data, 'delete');
   }
 };
 
