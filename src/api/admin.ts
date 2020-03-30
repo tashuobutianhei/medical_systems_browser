@@ -16,6 +16,13 @@ const adminClient =  {
   },  
   deleteDepartment(data) {
     return post('/admin/department', data, 'delete');
+  },
+  getPatient(params: {userInfo?: any, page?: number, size?: number} = {
+    page: 1,
+    size: 20,
+    userInfo: undefined
+  }) {
+    return get('/admin/user', params);
   }
 };
 

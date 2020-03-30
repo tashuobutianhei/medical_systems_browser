@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import adminClient from '../../../api/admin';
 import { message, Table, Statistic, Row, Col, Button } from 'antd';
-import { LikeOutlined, AppstoreAddOutlined, PlusCircleOutlined, HeartTwoTone, HomeTwoTone } from '@ant-design/icons';
+import { AppstoreAddOutlined, PlusCircleOutlined, HeartTwoTone, HomeTwoTone } from '@ant-design/icons';
 import AdminDepartmentTable from '../../../component/AdminDepartmentTable';
 import AddDepartmentModal from '../../../component/AddDepartmentModal';
 import AddDoctorModal from '../../../component/AddDoctorModal';

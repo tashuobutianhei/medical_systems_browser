@@ -8,7 +8,7 @@ import { userLogin, userLogout } from '../../../action/user';
 import jsCookie from 'js-cookie';
 
 // import DoctorCase from '../DoctorCase/index';
-// import DoctorWork from '../DoctorWork/index';
+import AdminUser from '../AdminUser/index';
 import AdminDepartment from '../AdminDepartment/index'
 
 import 'antd/dist/antd.css'
@@ -94,7 +94,7 @@ function Doctor (props: userType & RouteComponentProps) {
     <Content className="doctor-content">
       <div className="doctor-route">
         <Switch>
-            {/* <Route path="/Admin/User" component={DoctorWork}/> */}
+            <Route path="/Admin/User" component={AdminUser}/>
             <Route path="/Admin/Department" component={AdminDepartment} />
             {/* <Route path="/Admin/Info" component={DoctorSchedule} /> */}
             {/* <Redirect to='/Doctor/Home'></Redirect> */}
