@@ -1,10 +1,10 @@
 import { combineReducers } from 'redux'
 import user from './user'
-import patientCase from './patientCase'
+import patientCase from './patientCase';
 
 const appStore = combineReducers({
   user,
-  patientCase
+  patientCase,
 })
 
 export default appStore

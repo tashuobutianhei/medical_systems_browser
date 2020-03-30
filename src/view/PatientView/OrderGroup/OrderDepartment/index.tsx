@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Button, message, Row, Col } from 'antd';
-import departmentlient from '../../../../api/department';
+import { graphql } from 'react-apollo';
+import { fetchInfoALLGQL } from '../../../../api/graphql/gql';
 
 import 'antd/dist/antd.css'
 import './index.scss'
@@ -28,14 +29,11 @@ function Order (props: any) {
   }
 
   useEffect(() => {
-    const fetchData = async () => {
-      const res: any = await departmentlient.getdepartments();
-      if(res.code === 0) {
-        setDepartment(res.data);
-      }
+    if(props.data && props.data.Info) {
+      const data = props.data.Info;
+      setDepartment(data.departmentInfoList);
     }
-    fetchData();
-  }, []);
+  }, [props]);
 
   return (
     <div className="order-department">
@@ -71,3 +69,10 @@ function Order (props: any) {
 }
 
 export default Order;
+graphql(fetchInfoALLGQL, {
+  options() {
+    return {
+      fetchPolicy: 'cache-and-network',
+    };
+  } 
+})(Order)

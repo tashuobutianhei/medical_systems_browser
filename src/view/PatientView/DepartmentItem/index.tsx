@@ -1,12 +1,11 @@
 
 import React, { useState, useEffect } from 'react'
-import {message, Row, Col, Breadcrumb } from 'antd';
+import { Row, Col, Breadcrumb } from 'antd';
 import SchduleCommon from '../../../component/ScheduleCommon';
 import DoctorItem from '../../../component/DoctorItem';
 
-import departmentClient from '../../../api/department';
-import doctorClient from '../../../api/doctor';
-
+import { graphql } from 'react-apollo';
+import { fetchInfoALLGQL } from '../../../api/graphql/gql';
 
 import { ProfileTwoTone, IdcardTwoTone, EyeTwoTone } from '@ant-design/icons';
 
@@ -34,41 +33,15 @@ const guide = [
 
 function DepartmentItem (props: any) {
 
-  const [departmentList, setDepartmentList] = useState<any>({}); // 科室列表
-  const [doctorList, setDoctorList] = useState<any>([]); // 科室列表
-
-  const fetchData = async () => {
-
-    const departmentList:any = await departmentClient.getdepartments({
-      departmentId: props.match.params.departmentId
-    });
-
-    if(departmentList.code === 0) {
-      setDepartmentList(departmentList.data[0]);
-    } else {
-      message.error({
-        content: '服务错误'
-      })
-    }
-
-    const doctorList:any = await doctorClient.getDoctors({
-      departmentId: props.match.params.departmentId
-    });
-
-    if(doctorList.code === 0) {
-      setDoctorList(doctorList.data);
-    } else {
-      message.error({
-        content: '服务错误'
-      })
-    }
-  };
+  const [departmentList, setDepartmentList] = useState<any>({doctorList:[]}); // 科室列表
 
   useEffect(() => {
-    if (props.match.params.departmentId) {
-      fetchData();
+    if (props.match.params.departmentId && props.data && props.data.Info) {
+      const departmentInfoList = props.data.Info.departmentInfoList;
+
+      setDepartmentList(departmentInfoList.find(item => item.departmentId == props.match.params.departmentId ));
     }
-  },[props.match.params]);
+  },[props.match.params, props]);
 
   return (
     <div className="departmentItem">
@@ -117,7 +90,7 @@ function DepartmentItem (props: any) {
         <p className="departmentItem-title">科室医生</p>
         <Row justify="space-between">
           {
-            doctorList.map(doctor => {
+            departmentList && departmentList.doctorList.map(doctor => {
               return (
                 <Col key={doctor.workerId} span={4}>
                   <DoctorItem doctor={doctor} departmentName={departmentList.departmentName}></DoctorItem>
@@ -131,4 +104,10 @@ function DepartmentItem (props: any) {
   )
 }
 
-export default withRouter(DepartmentItem)
+export default graphql(fetchInfoALLGQL, {
+  options() {
+    return {
+      fetchPolicy: 'cache-and-network',
+    };
+  } 
+})(withRouter(DepartmentItem))

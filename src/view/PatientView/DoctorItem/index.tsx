@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { withRouter } from 'react-router';
-import { Row, Col, Button, Breadcrumb, message, Divider } from 'antd'
+import { Row, Col, Button, Breadcrumb, Divider } from 'antd'
 import {  HomeOutlined } from '@ant-design/icons';
 import CONST from '../../../common/const';
-
-import departmentClient from '../../../api/department';
-import doctorClient from '../../../api/doctor';
+import { graphql } from 'react-apollo';
+import { fetchInfoALLGQL } from '../../../api/graphql/gql';
 
 import 'antd/dist/antd.css'
 import './index.scss'
@@ -16,31 +15,6 @@ function DoctorItem (props: any) {
   const [departmentList,  setDepartmentList] = useState<any>([]); // 科室列表
   const [doctor, setDoctor] = useState<any>({}); //医生列表
 
-
-  const fetchData = async () => {
-    const departmentList:any = await departmentClient.getdepartments();
-    if(departmentList.code === 0) {
-      setDepartmentList(departmentList.data);
-    } else {
-      message.error({
-        content: '服务错误'
-      })
-    }
-
-    const doctorList:any = await doctorClient.getDoctors({
-      workerId: props.match.params.workerId
-    });
-
-    if(doctorList.code === 0) {
-      setDoctor(doctorList.data[0]);
-    } else {
-      message.error({
-        content: '服务错误'
-      })
-    }
-
-  }
-
   const reduceDepartmentName = () => {
     const itemDepartment =  departmentList && departmentList.find(item => {
       return item.departmentId === doctor.departmentId
@@ -50,10 +24,18 @@ function DoctorItem (props: any) {
   }
 
   useEffect(() => {
-    if (props.match.params.workerId) {
-      fetchData()
+    if (props.match.params.workerId && props.data && props.data.Info) {
+      const departmentInfoList = props.data.Info.departmentInfoList;
+      setDepartmentList(departmentInfoList);
+      departmentInfoList.forEach(item => {
+        item.doctorList.forEach(it => {
+          if (it.workerId === props.match.params.workerId) {
+            setDoctor(it);
+          }
+        })
+      });
     }
-  },[props.match.params.workerId]);
+  },[props.match.params.workerId, props]);
 
   return (
     <div className="DoctorItem">
@@ -97,4 +79,10 @@ function DoctorItem (props: any) {
   );
 }
 
-export default withRouter(DoctorItem);
+export default graphql(fetchInfoALLGQL, {
+  options() {
+    return {
+      fetchPolicy: 'cache-and-network',
+    };
+  } 
+})(withRouter(DoctorItem))

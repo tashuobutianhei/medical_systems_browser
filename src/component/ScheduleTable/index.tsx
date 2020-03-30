@@ -110,16 +110,6 @@ function ScheduleTable(props: {departmentId: string, user: any} & any) {
       workerId: seletDoctor,
     });
     if (res.code === 0) {
-      // debugger;
-      // const theAddDoctor = doctorList.find(item => {
-      //   return item.workerId === seletDoctor;
-      // })
-      // let midArray = [...EditdataList, {
-      //   ...theAddDoctor,
-      //   key: theAddDoctor.workerId,
-      //   wokrId: record.wokrId
-      // }];
-      // changeEditdataList([midArray]);
       fetchData()
     }
     changeseletDoctor('');

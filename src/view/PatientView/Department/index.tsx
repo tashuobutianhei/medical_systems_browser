@@ -1,31 +1,22 @@
 import React, { useState, useEffect } from 'react'
 import DepartmentItem from '../../../component/DepartmentItem';
-import departmentClient from '../../../api/department';
+
+import { graphql } from 'react-apollo';
+import { fetchInfoALLGQL } from '../../../api/graphql/gql';
 
 import 'antd/dist/antd.css'
 import './index.scss'
-import { message, Row, Col, Breadcrumb } from 'antd';
+import { Row, Col, Breadcrumb } from 'antd';
 
-function Deprartment () {
-
-
+function Deprartment (props: any) {
   const [departmentList, setDepartmentList] = useState<any>([]); // 科室列表
 
-
-  const fetchData = async () => {
-    const departmentList:any = await departmentClient.getdepartments();
-    if(departmentList.code === 0) {
-      setDepartmentList(departmentList.data);
-    } else {
-      message.error({
-        content: '服务错误'
-      })
-    }
-  };
-
   useEffect(() => {
-    fetchData();
-  },[]);
+    if(props.data && props.data.Info) {
+      const data = props.data.Info;
+      setDepartmentList(data.departmentInfoList);
+    }
+  }, [props]);
 
   return (
     <div className="department">
@@ -53,4 +44,10 @@ function Deprartment () {
   );
 }
 
-export default Deprartment;
+export default graphql(fetchInfoALLGQL, {
+  options() {
+    return {
+      fetchPolicy: 'cache-and-network',
+    };
+  } 
+})(Deprartment);
