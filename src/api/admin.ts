@@ -33,6 +33,17 @@ const adminClient =  {
   }) {
     return post('/admin/info', data);
   },
+  addExam(data: {
+    examinationName: string
+    examinationDesc: string
+  }) {
+    return post('/admin/exam', data);
+  },
+  deleteExam(data: {
+    examinationId: number | string
+  }) {
+    return post('/admin/exam', data, 'delete');
+  }
 };
 
 export default adminClient;

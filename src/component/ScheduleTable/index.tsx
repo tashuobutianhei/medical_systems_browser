@@ -175,7 +175,6 @@ function ScheduleTable(props: {departmentId: string, user: any} & any) {
           }</span>)
         )
       }
-
    },
     { title: '添加', 
       key: 'add', 

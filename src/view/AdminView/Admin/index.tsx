@@ -55,8 +55,6 @@ function Doctor (props: userType & RouteComponentProps) {
 
   const userInfo = props.user;
 
-  let key = props.location.pathname.split('/')[2];
-
   return <>
   <Layout className="layout">
     <Header className="header">
@@ -66,7 +64,7 @@ function Doctor (props: userType & RouteComponentProps) {
       <Menu
           theme="dark"
           mode="horizontal"
-          defaultSelectedKeys={[key]}
+          defaultSelectedKeys={['User']}
           onClick={(e: any) => {
             props.history.push(`/Admin/${e.key}`)
           }}

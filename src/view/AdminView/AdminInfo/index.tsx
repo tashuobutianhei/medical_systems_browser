@@ -1,20 +1,27 @@
+/* eslint-disable react/display-name */
 import React, { useState, useEffect } from 'react'
-import { Tabs, message, Upload, Badge, Button } from 'antd';
+import { Tabs, message, Upload, Badge, Button, Table, Modal } from 'antd';
+import { graphql } from 'react-apollo';
+import { fetchInfoALLGQL } from '../../../api/graphql/gql';
 import adminClient from '../../../api/admin';
+import departmentClient from '../../../api/department';
+import AddExamModal from '../../../component/AddExamModal/index';
 import './index.scss';
 const { TabPane } = Tabs;
 
-const AdminInfo = () => { 
-  
+const AdminInfo = (props: any) => { 
   const [mode, setMode] = useState<any>({
     home: 'data',
     examination: 'data',
     doctor: 'data',
     order: 'data'
   });
+
   const [tab, setTab] = useState<any>('home');
+  const [examVisable, setExamVisable] = useState<boolean>(false);
 
   const [fileList, setFileList] = useState<any>([]);
+  const [examination, setExamination] = useState<any>([]);
   
   const [info, setInfo] = useState<{
     id: Number
@@ -28,6 +35,51 @@ const AdminInfo = () => {
     doctor: null
   });
 
+  const columns = [
+    {
+      title: '化验项目id',
+      dataIndex: 'examinationId',
+      key: 'examinationId',
+    },
+    {
+      title: '化验项目',
+      dataIndex: 'examinationName',
+      key: 'examinationName',
+    },
+    {
+      title: '操作',
+      key: 'action',
+      render: (record: any) => {
+        return (
+          (<Button type="danger" 
+          onClick={() => {
+            Modal.confirm({
+              content: '是否确定删除',
+              onOk() {
+                adminClient.deleteExam({
+                  examinationId: record.examinationId
+                }).then((res:any) => {
+                  if(res.code === 0) {
+                    // message.error('删除失败')
+                   setExamination(examination.filter((item:any) => {
+                      return item.examinationId != record.examinationId
+                    }));
+                  } else {
+                    message.error('删除失败')
+                  }
+                })
+              },
+              onCancel() {},
+            })
+
+
+          }}
+          disabled={mode[tab] === 'data'} >删除</Button>)
+        )
+      }
+    },
+  ]
+
   useEffect(() => {
     const fetch = async () => {
       const res: any = await adminClient.getCommonInfo();
@@ -40,6 +92,13 @@ const AdminInfo = () => {
     }
     fetch();
   },[]);
+
+  useEffect(() => {
+    if(props.data && props.data.Info) {
+      const data = props.data.Info;
+      setExamination(data.examiation);
+    }
+  }, [props]);
 
   function initImg(img) {
     const aaa = img.split(',').map((item, index) => {
@@ -98,15 +157,29 @@ const AdminInfo = () => {
           data: JSON.stringify(fileList)
         })
         break;
+      case 'examination':
+        let obj = {...mode};
+        obj[tab] = 'data'
+        setMode({
+          ...obj
+        });
+      break;
     
       default:
         break;
     }
-
   }
 
-
   return (
+    <>
+    <AddExamModal addExamVisable={examVisable} 
+    setExamVisable={setExamVisable} 
+    success={async ()=>{
+      const res:any = await departmentClient.getExamination();
+      if (res.cdoe === 0) {
+        setExamination(res.data);
+      }
+    }}></AddExamModal>
     <div className="adminInfo">
       <Tabs type="line" 
       defaultActiveKey='home'
@@ -137,7 +210,16 @@ const AdminInfo = () => {
           }
         </TabPane>
         <TabPane tab="检查项目" key="examination">
-          Content of Tab Pane 3
+          <Table
+            columns={columns}
+            pagination={false}
+            rowKey={record => record.examinationDesc} 
+            expandable={{
+              expandedRowRender: record => <p style={{ margin: 0 }}>{record.examinationDesc}</p>,
+              rowExpandable: record => record.name !== 'Not Expandable',
+            }}
+            dataSource={examination}
+          />
         </TabPane>
         <TabPane tab="就医须知" key="doctor">
           Content of Tab Pane 2
@@ -146,6 +228,7 @@ const AdminInfo = () => {
           Content of Tab Pane 3
         </TabPane>
       </Tabs>
+      <div className="adminInfo-edit">
       {
         mode[tab] === 'data' ? 
         <Button onClick={() => {
@@ -155,11 +238,29 @@ const AdminInfo = () => {
             ...obj
           });
         }}>编辑</Button> 
-        : <Button onClick={update}>保存</Button> 
+        : <Button onClick={update} type="primary">保存</Button> 
       }
-           
+      {
+        mode[tab] !== 'data' && tab === 'examination' ?
+        <Button 
+        style={{
+          marginLeft: '10px'
+        }}
+        onClick={() => {
+          setExamVisable(true)
+        }} 
+        type="primary">增加项目</Button> : null
+      }
+      </div>           
     </div>
+    </>
   )
 }
 
-export default AdminInfo;
+export default graphql(fetchInfoALLGQL, {
+  options() {
+    return {
+      fetchPolicy: 'cache-and-network',
+    };
+  } 
+})(AdminInfo)
