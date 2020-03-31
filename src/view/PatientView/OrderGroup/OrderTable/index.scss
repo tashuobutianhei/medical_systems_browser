@@ -1,4 +1,7 @@
 .order-table {
+  padding-bottom: 30px;
+  position: relative;
+
   &-title {
     text-align: center;
     font-size: 20px;
@@ -13,5 +16,10 @@
         color: green;
       }
     }
+  }
+  &-footer {
+    margin-top: 20px;
+    position: absolute;
+    right: 0px;
   }
 }

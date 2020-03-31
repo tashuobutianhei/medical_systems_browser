@@ -60,6 +60,11 @@ function Order (props: any) {
     }
   }
 
+  const prevStep = () => {
+    let cur = current;
+    setScurrent(--cur);
+  }
+
   useEffect(() => {
     if(props.data && props.data.Info) {
       const data = props.data.Info;
@@ -86,10 +91,10 @@ function Order (props: any) {
             current == 0 ? <OrderRead nextStep={nextStep}></OrderRead> : null
           }
           {
-            current == 1 ? <OrderDepartment nextStep={nextStep} department={department}></OrderDepartment> : null
+            current == 1 ? <OrderDepartment nextStep={nextStep} department={department} prevStep={prevStep}></OrderDepartment> : null
           }
           {
-            current == 2 ? <OrderTable nextStep={nextStep} order={order}></OrderTable> : null
+            current == 2 ? <OrderTable nextStep={nextStep} order={order} prevStep={prevStep}></OrderTable> : null
           }
           {
             current == 3 ? <OrderForm nextStep={nextStep} order={order}></OrderForm> : null

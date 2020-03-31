@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Table, message } from 'antd';
+import { Table, message, Button } from 'antd';
 import moment from 'moment';
 import CONST from '../../../../common/const';
 import doctorClient from '../../../../api/doctor';
@@ -15,33 +15,7 @@ type order =  {
   doctorInfo?: any
 }
 
-const initColumns = [
-  {
-    title: '科室',
-    dataIndex: 'department',
-    key: 'department',
-    render: (value, row, index) => {
-      const obj = {
-        children: value,
-        props: {
-          rowSpan: 1
-        },
-      };
-      if (index === 0) {
-        obj.props.rowSpan = 3;
-      } else {
-        obj.props.rowSpan = 0;
-      }
-      return obj;
-    },
-  },
-  {
-    title: '时间',
-    dataIndex: 'time',
-    key: 'time',
-  },
-];
-let columns:any[] = initColumns;
+let columns:any[] = [];
 
 
 const getScheduleDateList = () => {
@@ -88,7 +62,33 @@ function Order (props: any) {
 
     // 获得近六天的list
   const initTableCol = () => {
-    columns = initColumns;
+    columns = [
+      {
+        title: '科室',
+        dataIndex: 'department',
+        key: 'department',
+        render: (value, row, index) => {
+          const obj = {
+            children: value,
+            props: {
+              rowSpan: 1
+            },
+          };
+          if (index === 0) {
+            obj.props.rowSpan = 3;
+          } else {
+            obj.props.rowSpan = 0;
+          }
+          return obj;
+        },
+      },
+      {
+        title: '时间',
+        dataIndex: 'time',
+        key: 'time',
+      },
+    ];
+
     getScheduleDateList().forEach(item => {
       columns.push({
         title: `${getDateString(item)}-星期${CONST.WEEK_DAY[item.getDay()]}`,
@@ -191,6 +191,8 @@ function Order (props: any) {
           pagination={false}/>
         </div>
         <div className="order-table-footer">
+          <Button type="primary" onClick={props.prevStep}
+            >返回上一步</Button>
         </div>
     </div>
   )

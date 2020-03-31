@@ -7,26 +7,6 @@ import 'antd/dist/antd.css'
 import './index.scss'
 
 function Order (props: any) {
-  const [checked, setChecked] = useState<number|string>(-1);
-
-  const onclickButton = () => {
-    if (checked === -1) {
-      message.error({
-        content: '请选择科室',
-        duration: 2
-      })
-    } else {
-      const checkedDepartment = props.department.find(item => item.departmentId == checked);
-      props.nextStep({
-        'department': checkedDepartment
-      });
-    }
-  }
-
-  const onChecked = (item) => {
-    setChecked(item.departmentId);
-  }
-
   return (
     <div className="order-department">
         <p className="order-department-title">
@@ -40,10 +20,14 @@ function Order (props: any) {
                   <Col key={item.departmentId} 
                     span={4}
                     onClick={()=>{
-                      onChecked(item);
+                      // onChecked(item);
+                      // const checkedDepartment = props.department.find(item => item.departmentId == checked);
+                      props.nextStep({
+                        'department': item
+                      });
                     }}
                     className={['order-department-content-item',
-                    item.departmentId == checked ? 'order-department-content-itemChecked' : ''
+                    // item.departmentId == checked ? 'order-department-content-itemChecked' : ''
                     ].join(' ')}>
                     {item.departmentName}
                   </Col>
@@ -53,8 +37,8 @@ function Order (props: any) {
         </Row>
 
         <div className="order-department-footer">
-          <Button type="primary" 
-          onClick={onclickButton}>确认</Button>
+           <Button type="primary" onClick={props.prevStep}
+          >返回</Button>
         </div>
     </div>
   );
