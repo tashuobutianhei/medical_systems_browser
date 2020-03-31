@@ -15,7 +15,7 @@ type order =  {
   doctorInfo?: any
 }
 
-const columns:any[] = [
+const initColumns = [
   {
     title: '科室',
     dataIndex: 'department',
@@ -41,6 +41,8 @@ const columns:any[] = [
     key: 'time',
   },
 ];
+let columns:any[] = initColumns;
+
 
 const getScheduleDateList = () => {
   const ScheduleDateList = [];
@@ -86,6 +88,7 @@ function Order (props: any) {
 
     // 获得近六天的list
   const initTableCol = () => {
+    columns = initColumns;
     getScheduleDateList().forEach(item => {
       columns.push({
         title: `${getDateString(item)}-星期${CONST.WEEK_DAY[item.getDay()]}`,

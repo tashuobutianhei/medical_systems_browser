@@ -1,5 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Steps, Divider, message } from 'antd';
+
+import { graphql } from 'react-apollo';
+import { fetchInfoALLGQL } from '../../../api/graphql/gql';
 
 import OrderRead from '../OrderGroup/OrderRead';
 import OrderDepartment from '../OrderGroup/OrderDepartment';
@@ -37,6 +40,8 @@ const StepList = [
 function Order (props: any) {
   const [current, setScurrent] = useState<number>(0);
   const [order, setOrder] = useState<any>({})
+  const [department, setDepartment] = useState<any[]>([]);
+
 
   const nextStep = (params: any) => {
     if(!(props.user && props.user.type == 1)) {
@@ -54,6 +59,13 @@ function Order (props: any) {
       })
     }
   }
+
+  useEffect(() => {
+    if(props.data && props.data.Info) {
+      const data = props.data.Info;
+      setDepartment(data.departmentInfoList);
+    }
+  }, [props]);
 
   return (
     <div className="order">
@@ -74,7 +86,7 @@ function Order (props: any) {
             current == 0 ? <OrderRead nextStep={nextStep}></OrderRead> : null
           }
           {
-            current == 1 ? <OrderDepartment nextStep={nextStep}></OrderDepartment> : null
+            current == 1 ? <OrderDepartment nextStep={nextStep} department={department}></OrderDepartment> : null
           }
           {
             current == 2 ? <OrderTable nextStep={nextStep} order={order}></OrderTable> : null
@@ -87,10 +99,16 @@ function Order (props: any) {
   );
 }
 
-export default connect(
+export default graphql(fetchInfoALLGQL, {
+  options() {
+    return {
+      fetchPolicy: 'cache-and-network',
+    };
+  } 
+})(connect(
   (state: { user: any; }) => {
     return {
       user: state.user
     }
   }
-)(Order);
+)(Order))

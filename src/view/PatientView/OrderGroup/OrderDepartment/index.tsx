@@ -7,7 +7,6 @@ import 'antd/dist/antd.css'
 import './index.scss'
 
 function Order (props: any) {
-  const [department, setDepartment] = useState<any[]>([]);
   const [checked, setChecked] = useState<number|string>(-1);
 
   const onclickButton = () => {
@@ -17,7 +16,7 @@ function Order (props: any) {
         duration: 2
       })
     } else {
-      const checkedDepartment = department.find(item => item.departmentId == checked);
+      const checkedDepartment = props.department.find(item => item.departmentId == checked);
       props.nextStep({
         'department': checkedDepartment
       });
@@ -28,13 +27,6 @@ function Order (props: any) {
     setChecked(item.departmentId);
   }
 
-  useEffect(() => {
-    if(props.data && props.data.Info) {
-      const data = props.data.Info;
-      setDepartment(data.departmentInfoList);
-    }
-  }, [props]);
-
   return (
     <div className="order-department">
         <p className="order-department-title">
@@ -43,7 +35,7 @@ function Order (props: any) {
         </p>
         <Row className="order-department-content" gutter={16}>
             {
-              department.map(item => {
+              props.department && props.department.map(item => {
                 return (
                   <Col key={item.departmentId} 
                     span={4}
@@ -69,10 +61,3 @@ function Order (props: any) {
 }
 
 export default Order;
-graphql(fetchInfoALLGQL, {
-  options() {
-    return {
-      fetchPolicy: 'cache-and-network',
-    };
-  } 
-})(Order)

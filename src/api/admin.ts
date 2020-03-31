@@ -23,7 +23,10 @@ const adminClient =  {
     userInfo: undefined
   }) {
     return get('/admin/user', params);
-  }
+  },
+  getCommonInfo() {
+    return get('/admin/info');
+  },
 };
 
 export default adminClient;

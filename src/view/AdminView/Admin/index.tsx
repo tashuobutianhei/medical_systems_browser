@@ -7,7 +7,7 @@ import { connect } from 'react-redux'
 import { userLogin, userLogout } from '../../../action/user';
 import jsCookie from 'js-cookie';
 
-// import DoctorCase from '../DoctorCase/index';
+import AdminInfo from '../AdminInfo/index';
 import AdminUser from '../AdminUser/index';
 import AdminDepartment from '../AdminDepartment/index'
 
@@ -96,8 +96,8 @@ function Doctor (props: userType & RouteComponentProps) {
         <Switch>
             <Route path="/Admin/User" component={AdminUser}/>
             <Route path="/Admin/Department" component={AdminDepartment} />
-            {/* <Route path="/Admin/Info" component={DoctorSchedule} /> */}
-            {/* <Redirect to='/Doctor/Home'></Redirect> */}
+            <Route path="/Admin/Info" component={AdminInfo} />
+            <Redirect to='/Admin/User'></Redirect>
         </Switch>
       </div>
     </Content>
