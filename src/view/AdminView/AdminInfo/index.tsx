@@ -6,7 +6,6 @@ const { TabPane } = Tabs;
 
 const AdminInfo = () => { 
   
-  const [imageUrl, setImageUrl] = useState<any>([]);
   const [mode, setMode] = useState<any>({
     home: 'data',
     examination: 'data',
@@ -45,7 +44,7 @@ const AdminInfo = () => {
   function initImg(img) {
     const aaa = img.split(',').map((item, index) => {
       return {
-        uid: index,
+        uid: `store-${index}`,
         name: item,
         status: 'done',
         url: `http://localhost:3000${item}`,
@@ -65,13 +64,6 @@ const AdminInfo = () => {
     })
   }
 
-
-  function getBase64(img, callback) {
-    const reader = new FileReader();
-    reader.addEventListener('load', () => callback(reader.result));
-    reader.readAsDataURL(img);
-  }
-
   function beforeUpload(file) {
     const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
     if (!isJpgOrPng) {
@@ -82,6 +74,35 @@ const AdminInfo = () => {
       message.error('图片过大，超过2MB!');
     }
     return isJpgOrPng && isLt2M;
+  }
+
+  const updateClient = async (data) => {
+    const res:any = await adminClient.updateCommonInfo(data)
+    if(res.code === 0) {
+      message.success('编辑成功');
+      let obj = {...mode};
+      obj[tab] = 'data'
+      setMode({
+        ...obj
+      });
+    } else {
+      message.error('编辑失败');
+    }
+  }
+
+  const update = () => {
+    switch (tab) {
+      case 'home':
+        updateClient({
+          type: 'carousel',
+          data: JSON.stringify(fileList)
+        })
+        break;
+    
+      default:
+        break;
+    }
+
   }
 
 
@@ -106,16 +127,12 @@ const AdminInfo = () => {
               listType="picture-card"
               className="avatar-uploader"
               beforeUpload={beforeUpload}
-              customRequest={(params) => {
-                getBase64(params.file, imageUrl => {
-                  setImageUrl(imageUrl);
-                });
+              onChange={(params) => {
+                console.log(params);
+                setFileList(params.fileList);
               }}
             >     
-            {
-            imageUrl.lenght ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : 
             <div className="ant-upload-text">上传</div>
-            }
             </Upload>  
           }
         </TabPane>
@@ -138,13 +155,7 @@ const AdminInfo = () => {
             ...obj
           });
         }}>编辑</Button> 
-        : <Button onClick={() => {
-          let obj = {...mode};
-          obj[tab] = 'data'
-          setMode({
-            ...obj
-          });
-        }}>保存</Button> 
+        : <Button onClick={update}>保存</Button> 
       }
            
     </div>

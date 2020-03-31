@@ -27,6 +27,12 @@ const adminClient =  {
   getCommonInfo() {
     return get('/admin/info');
   },
+  updateCommonInfo(data:{
+    type: string,
+    data: any
+  }) {
+    return post('/admin/info', data);
+  },
 };
 
 export default adminClient;
