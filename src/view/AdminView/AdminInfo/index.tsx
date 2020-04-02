@@ -1,6 +1,6 @@
 /* eslint-disable react/display-name */
-import React, { useState, useEffect } from 'react'
-import { Tabs, message, Upload, Badge, Button, Table, Modal } from 'antd';
+import React, { useState, useEffect, useReducer } from 'react'
+import { Tabs, message, Upload, Badge, Button, Table, Modal, Input } from 'antd';
 import { graphql } from 'react-apollo';
 import { fetchInfoALLGQL } from '../../../api/graphql/gql';
 import adminClient from '../../../api/admin';
@@ -10,6 +10,8 @@ import './index.scss';
 const { TabPane } = Tabs;
 
 const AdminInfo = (props: any) => { 
+  let initInfo = {};
+
   const [mode, setMode] = useState<any>({
     home: 'data',
     examination: 'data',
@@ -23,17 +25,25 @@ const AdminInfo = (props: any) => {
   const [fileList, setFileList] = useState<any>([]);
   const [examination, setExamination] = useState<any>([]);
   
-  const [info, setInfo] = useState<{
-    id: Number
-    carousel: String | null
-    order: String | null
-    doctor: String | null
-  }>({
+  const [info, dispatch ] = useReducer((state, action) => {
+     switch(action.type){
+            case 'set':
+                return action.data;
+            case 'updata':
+                return {
+                  ...state,
+                  ...action.val
+                }
+            case 'reset':
+                return initInfo;
+            }
+  }, {
     id: 0,
     carousel: null,
-    order: null,
-    doctor: null
+    order: '',
+    doctor: ''
   });
+
 
   const columns = [
     {
@@ -84,7 +94,8 @@ const AdminInfo = (props: any) => {
     const fetch = async () => {
       const res: any = await adminClient.getCommonInfo();
       if(res.code === 0) {
-        setInfo(res.data);
+        dispatch({type: 'set', data: res.data})
+        initInfo = info;
         initImg(res.data.carousel);
       } else {
         message.error('数据错误')
@@ -164,7 +175,18 @@ const AdminInfo = (props: any) => {
           ...obj
         });
       break;
-    
+      case 'doctor':
+        updateClient({
+          type: 'doctor',
+          data: info.doctor
+        });
+      break;
+      case 'order':
+        updateClient({
+          type: 'order',
+          data: info.order
+        })
+      break;
       default:
         break;
     }
@@ -222,10 +244,36 @@ const AdminInfo = (props: any) => {
           />
         </TabPane>
         <TabPane tab="就医须知" key="doctor">
-          Content of Tab Pane 2
+          <p>编辑就医需知</p>
+          <Input.TextArea 
+          value={info.doctor}
+          rows={10}
+          onChange={(e) => {
+            dispatch({
+              type: 'updata', 
+              val: {
+                doctor: e.target.value
+              }
+            })
+          }}
+          disabled={mode['doctor'] === 'data'}> 
+          </Input.TextArea>
         </TabPane>
         <TabPane tab="挂号须知" key="order">
-          Content of Tab Pane 3
+        <p>编辑挂号须知</p>
+          <Input.TextArea 
+          value={info.order}
+          rows={10}
+          onChange={(e) => {
+            dispatch({
+              type: 'updata', 
+              val: {
+                order: e.target.value
+              }
+            })
+          }}
+          disabled={mode['order'] === 'data'}> 
+          </Input.TextArea>
         </TabPane>
       </Tabs>
       <div className="adminInfo-edit">
