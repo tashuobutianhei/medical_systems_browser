@@ -22,11 +22,7 @@ function Order (props: any) {
   return (
     <div className="order-read">
         <p className="order-read-title">挂号协议</p>
-        <p className="order-read-content">这是挂号协议的内容 TODO这是挂号协议的内容 
-          TODO这是挂号协议的内容 TODO这是挂号协议的内容 
-          TODO这是挂号协议的内容 TODO这是挂号协议的内容 
-          TODO这是挂号协议的内容 TODO这是挂号协议的内容 TODO这是挂号协议的内容 TODO这是挂号协
-          议的内容 TODO这是挂号协议的内容 TODO这是挂号协议的内容 TODO</p>
+        <p className="order-read-content">{props.orderText}</p>
 
         <div className="order-read-footer">
           <Checkbox checked={readStatus} onChange={(e) => {

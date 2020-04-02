@@ -17,7 +17,7 @@ import { fetchInfoALLGQL } from '../../../api/graphql/gql';
 import 'antd/dist/antd.css'
 import './index.scss'
 
-const CarouselList = ['lun1.jpg','lun2.jpg', 'lun3.jpg'];
+// const CarouselList = ['lun1.jpg','lun2.jpg', 'lun3.jpg'];
 
 const GudieList = [
   {
@@ -48,6 +48,8 @@ function Home (props: any) {
 
   const [departmentInfo, setDepartmentInfo] = useState<any>({}); // 当前激活科室信息
   const [doctorToday, setDoctorToday] = useState<any>([]);// 今日值班医生列表
+
+  const [CarouselList, setCarouselList] = useState<string[]>([]);
 
   const fetchData = async() => {
 
@@ -126,6 +128,10 @@ function Home (props: any) {
       });
 
       setDoctorList(midArray);
+
+      setCarouselList(data.commonInfo.carousel.split(',').filter(item => {
+        return item !== ''
+      }));
     }
   }, [props]);
 
@@ -133,9 +139,11 @@ function Home (props: any) {
     <div className="PatientHome">
       <Carousel autoplay={true} effect="fade" className="PatientHome-Carousel">
         {
+          CarouselList.length > 0 ?
           CarouselList.map(item => {
-            return <img src={'/img/' + item} key={item}></img>
-          })
+            return <img src={`http://localhost:3000${item}`} key={item}></img>
+          }) : 
+          <img src={'/img/lun1.jpg'}></img>
         }
       </Carousel>
       <div className="PatientHome-body">

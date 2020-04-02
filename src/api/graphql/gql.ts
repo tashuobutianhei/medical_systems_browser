@@ -28,6 +28,30 @@ export const fetchInfoALLGQL = gql`
         examinationId
         examinationDesc
       }
+      commonInfo {
+        id
+        carousel
+        doctor
+        order
+      }
+    } 
+  }
+`
+
+export const fetchInfoCommonGQL = gql`
+  query {
+    Info{
+      examiation {
+        examinationName
+        examinationId
+        examinationDesc
+      }
+      commonInfo {
+        id
+        carousel
+        doctor
+        order
+      }
     } 
   }
 `

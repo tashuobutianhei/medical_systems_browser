@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useReducer } from 'react'
 import { Tabs, message, Upload, Badge, Button, Table, Modal, Input } from 'antd';
 import { graphql } from 'react-apollo';
-import { fetchInfoALLGQL } from '../../../api/graphql/gql';
+import { fetchInfoCommonGQL } from '../../../api/graphql/gql';
 import adminClient from '../../../api/admin';
 import departmentClient from '../../../api/department';
 import AddExamModal from '../../../component/AddExamModal/index';
@@ -91,23 +91,13 @@ const AdminInfo = (props: any) => {
   ]
 
   useEffect(() => {
-    const fetch = async () => {
-      const res: any = await adminClient.getCommonInfo();
-      if(res.code === 0) {
-        dispatch({type: 'set', data: res.data})
-        initInfo = info;
-        initImg(res.data.carousel);
-      } else {
-        message.error('数据错误')
-      }
-    }
-    fetch();
-  },[]);
-
-  useEffect(() => {
     if(props.data && props.data.Info) {
       const data = props.data.Info;
       setExamination(data.examiation);
+
+      dispatch({type: 'set', data: data.commonInfo})
+      initInfo = info;
+      initImg(data.commonInfo.carousel);
     }
   }, [props]);
 
@@ -305,7 +295,7 @@ const AdminInfo = (props: any) => {
   )
 }
 
-export default graphql(fetchInfoALLGQL, {
+export default graphql(fetchInfoCommonGQL, {
   options() {
     return {
       fetchPolicy: 'cache-and-network',

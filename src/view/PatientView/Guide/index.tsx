@@ -6,6 +6,7 @@ import {CSSTransition} from 'react-transition-group';
 import GuideShedule from '../GuideGroup/Schedule';
 import Info from '../GuideGroup/Info';
 import DoctorList from '../GuideGroup/DoctorList'
+import ExaminationTable from '../GuideGroup/ExaminationTable';
 
 import 'antd/dist/antd.css'
 import './index.scss'
@@ -25,11 +26,18 @@ const GudieList = [
     path: 'Info'
   },
   {
+    name: '化验项目',
+    color: '#ffffff',
+    textColor: 'black',
+    path: 'Examination'
+  },
+  {
     name: '值班医师',
     color: '#306f3d',
     textColor: 'white',
     path: 'DoctorList'
-  }
+  },
+  
 ]
 function Home (props: any) {
 
@@ -71,6 +79,7 @@ function Home (props: any) {
             <Route exact path="/Patient/Guide/Schedule" component={GuideShedule}/>
             <Route  path="/Patient/Guide/Info" component={Info}/>
             <Route  path="/Patient/Guide/DoctorList" component={DoctorList}/>
+            <Route  path="/Patient/Guide/Examination" component={ExaminationTable}/>
             <Redirect to='/Patient/Guide/Schedule'></Redirect>
           </Switch>
         </div>

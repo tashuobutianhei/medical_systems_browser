@@ -40,7 +40,9 @@ const StepList = [
 function Order (props: any) {
   const [current, setScurrent] = useState<number>(0);
   const [order, setOrder] = useState<any>({})
+
   const [department, setDepartment] = useState<any[]>([]);
+  const [orderText, setOrderText] = useState<string>('');
 
 
   const nextStep = (params: any) => {
@@ -69,6 +71,7 @@ function Order (props: any) {
     if(props.data && props.data.Info) {
       const data = props.data.Info;
       setDepartment(data.departmentInfoList);
+      setOrderText(data.commonInfo.order);
     }
   }, [props]);
 
@@ -88,7 +91,7 @@ function Order (props: any) {
 
         <div className='order-content'>
           {
-            current == 0 ? <OrderRead nextStep={nextStep}></OrderRead> : null
+            current == 0 ? <OrderRead nextStep={nextStep} orderText={orderText}></OrderRead> : null
           }
           {
             current == 1 ? <OrderDepartment nextStep={nextStep} department={department} prevStep={prevStep}></OrderDepartment> : null
