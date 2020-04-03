@@ -23,9 +23,13 @@ export function LoginModal(props: Props) {
   let loginForm: any;
 
   const  login = () => {
-    loginForm.validateFields((err: any, values: { username: string; password: string; }) => {
+    loginForm.validateFields((err: any, values: { username: string; password: string; captcha: string | number }) => {
       if(!err) {
-        userClient.login(values.username, values.password, props.userType).then((res) => {
+        userClient.login({
+          username: values.username,
+          password: values.password,
+          captcha: values.captcha
+        }, props.userType, 0).then((res) => {
           const res2: any = res;
           if(res2.code === 0) {
             jsCookie.set('the_docters_token', res2.data.token, { expires: 30, path: '/' });

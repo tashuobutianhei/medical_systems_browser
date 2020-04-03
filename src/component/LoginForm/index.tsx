@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Form } from '@ant-design/compatible';
-import '@ant-design/compatible/assets/index.css';
-import { Input, Checkbox } from 'antd';
+import { Input, Checkbox, message, Row, Col } from 'antd';
+import userClient from '../../api/user'
 
+import '@ant-design/compatible/assets/index.css';
 
 import 'antd/dist/antd.css'
 import './index.scss'
@@ -20,8 +21,25 @@ const formItemLayout = {
 
 function LoginForm(props: Props) {
   const { getFieldDecorator } = props.form;
+  const [cap, setCap] = useState<any>('');
+
+  const fetchCap = async () => {
+    const res:any = await userClient.getcaptcha();
+    if(res.code === 0) {
+     setCap(res.cap);
+    } else {
+      message.error('验证码获取失败');
+    }
+  }
+
+  useEffect(() => {
+   fetchCap();
+  }, []);
+  
   return (
+    <>
     <Form className="login-form" {...formItemLayout}>
+     
       <Form.Item>
         {getFieldDecorator('username', {
           rules: [{ required: true, message: '至少得告诉我你叫啥呀？!' }],
@@ -44,6 +62,25 @@ function LoginForm(props: Props) {
         )}
       </Form.Item>
       <Form.Item>
+        {getFieldDecorator('captcha', {
+          rules: [{ required: true, message: '请输入验证码' }],
+        })(
+          <Row justify="space-between">
+            <Col span="18">
+            <Input
+            prefix={<LockOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
+            placeholder="验证码"
+            />
+            </Col>
+            <Col  span="4">
+              <img className="login-cap" src={cap} onClick={() => {
+                fetchCap();
+              }}></img>
+            </Col>
+          </Row>
+        )}
+      </Form.Item>
+      <Form.Item>
         <div>
           {getFieldDecorator('remember', {
             valuePropName: 'checked',
@@ -63,6 +100,7 @@ function LoginForm(props: Props) {
         }
       </Form.Item>
     </Form>
+    </>
   )
 }
 

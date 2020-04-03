@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {Modal, message} from 'antd';
+import {Modal, message, Form} from 'antd';
 
 import {WrappedLoginForm} from '../LoginForm/index';
 import {WrappedRegForm} from '../registerForm'
@@ -20,7 +20,8 @@ type Props = {
 export function LoginRegModal(props: Props) {
   let [action,changeStatus]  = useState<string>('login');
   let visible = props.visible;
-  let regForm, loginForm: any;
+  let loginForm: any;
+  let [regForm] = Form.useForm();
 
   const changeStatusFunc = (aciton:string) => {
     changeStatus(aciton);
@@ -31,9 +32,14 @@ export function LoginRegModal(props: Props) {
   }
 
   const  login = () => {
-    loginForm.validateFields((err: any, values: { username: string; password: string; }) => {
+    loginForm.validateFields((err: any, values: { username: string; password: string; captcha: string | number }) => {
       if(!err) {
-        userClient.login(values.username, values.password, 1).then((res) => {
+        // console.log()
+        userClient.login({
+            username: values.username,
+            password: values.password,
+            captcha: values.captcha
+          }, 1, 0).then((res) => {
           const res2: any = res;
           if(res2.code === 0) {
             jsCookie.set('the_docters_token', res2.data.token, { expires: 30, path: '/' });
@@ -59,10 +65,11 @@ export function LoginRegModal(props: Props) {
     })
   }
 
-  const register = () =>  {
-    regForm.validateFields((err: any, values: any) => {
-      if(!err) {
-        const {username, password, name, idcard, sex, age, tel} = values;
+  const register = async () =>  {
+    try {
+      const values = await regForm.validateFields();
+      console.log('Success:', values);
+      const {username, password, name, idcard, sex, age, tel} = values;
         userClient.register({
           username,
           password,
@@ -88,12 +95,9 @@ export function LoginRegModal(props: Props) {
             });
           }
         })
-      } else {
-        message.error({
-          content: '信息不完善'
-        })
-      }
-    })
+    } catch (errorInfo) {
+      console.log('Failed:', errorInfo);
+    }
   }
 
   return(
@@ -108,7 +112,7 @@ export function LoginRegModal(props: Props) {
     {
       action === 'login' ? 
       <WrappedLoginForm  ref={(c)=> loginForm = c } changeStatus={changeStatusFunc} type='patient'></WrappedLoginForm> : 
-      <WrappedRegForm ref={(c)=> regForm = c } changeStatus={changeStatusFunc}></WrappedRegForm>
+      <WrappedRegForm form={regForm} changeStatus={changeStatusFunc}></WrappedRegForm>
     }
   </Modal>
   )
