@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import userClient from '../../api/user';
 import '@ant-design/compatible/assets/index.css';
-import { Form, Input, Divider, Radio, InputNumber, message } from 'antd';
+import { Form, Input, Divider, Radio, InputNumber, message, Button, Col, Row } from 'antd';
 
 
 import 'antd/dist/antd.css'
@@ -19,6 +19,28 @@ const formItemLayout = {
 };
 
 function RegForm(props:Props) {
+  const [second, setSecond] = useState<number>(60);
+  const [disabledCap, setDisabledCap] = useState<boolean>(false);
+
+  useEffect(() => {
+    let id; 
+    if (disabledCap) {
+      let a = 60;
+      const id = setInterval(() => {
+          a--;
+          if (a === 0) {
+            clearInterval(id);
+            setDisabledCap(false);
+            a = 60;
+          }
+          setSecond(a);
+        }, 1000);
+    } else {
+      clearInterval(id);
+      setSecond(60);
+    }
+  }, [disabledCap]);
+
   return (
     <Form form={props.form} className="login-form" {...formItemLayout}>
     <Form.Item 
@@ -105,6 +127,19 @@ function RegForm(props:Props) {
           } 
           return Promise.resolve();
         }
+      }),({ getFieldValue }) => ({
+        async validator(rule, value) {
+          const res: any = await userClient.checkUserInfo({key:'idcard', value: value});
+          if(res.code === 0) {
+            if(res.data !== null) {
+              return Promise.reject('身份证已经被注册');
+            }  
+            return Promise.resolve();
+          } else {
+            message.error('服务错误');
+            return Promise.reject('服务错误');
+          }
+        }
       })]} 
       hasFeedback> 
       <Input
@@ -134,6 +169,34 @@ function RegForm(props:Props) {
           prefix={<LockOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
           placeholder="输入手机号"
         />
+    </Form.Item>
+    <Form.Item name="phoneCaptcha" rules={[{required: true, message: '请输入验证码'}]}>
+      <Row justify="space-between">
+        <Col span="17">
+          <Input  placeholder="输入验证码"/>
+        </Col>
+        <Col >
+          <Button 
+          disabled={disabledCap}
+          onClick={async () => {
+            if(!props.form.getFieldValue('tel')) {
+              message.error('输入手机号');
+              return;
+            }
+            const res:any = await userClient.getPhone({
+              type: 'reg',
+              mobile: props.form.getFieldValue('tel')
+            });
+            if(res.code === 0) {
+              setDisabledCap(true)
+            } else {
+              message.error('短信发送失败');
+            }
+          }}>{ disabledCap ? `(${second}s)后重新发送` :
+          "获取验证码"
+          }</Button>
+        </Col>
+      </Row>
     </Form.Item>
     <Form.Item label="性别" wrapperCol={{ span: 12}} name="sex" hasFeedback
     rules={[{ required: true, message: '选择性别' }]}>

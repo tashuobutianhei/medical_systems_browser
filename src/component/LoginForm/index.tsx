@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Form } from '@ant-design/compatible';
-import { Input, Checkbox, message, Row, Col } from 'antd';
+import { Input, Checkbox, message, Row, Col, Form, Tabs, Button } from 'antd';
 import userClient from '../../api/user'
 
 import '@ant-design/compatible/assets/index.css';
@@ -20,8 +19,30 @@ const formItemLayout = {
 };
 
 function LoginForm(props: Props) {
-  const { getFieldDecorator } = props.form;
   const [cap, setCap] = useState<any>('');
+
+  const [second, setSecond] = useState<number>(60);
+  const [disabledCap, setDisabledCap] = useState<boolean>(false);
+  const [loginType, setLoginType] = useState('password');
+
+  useEffect(() => {
+    let id; 
+    if (disabledCap) {
+      let a = 60;
+      const id = setInterval(() => {
+          a--;
+          if (a === 0) {
+            clearInterval(id);
+            setDisabledCap(false);
+            a = 60;
+          }
+          setSecond(a);
+        }, 1000);
+    } else {
+      clearInterval(id);
+      setSecond(60);
+    }
+  }, [disabledCap]);
 
   const fetchCap = async () => {
     const res:any = await userClient.getcaptcha();
@@ -38,62 +59,121 @@ function LoginForm(props: Props) {
   
   return (
     <>
-    <Form className="login-form" {...formItemLayout}>
-     
+    <Form className="login-form" form={props.form} {...formItemLayout}>
+      <Tabs defaultActiveKey="password" onChange={(e => {
+        props.form.resetFields();
+        setLoginType(e);
+      })}>
+        <Tabs.TabPane tab="用户名密码" key="password">
+          <Form.Item 
+            name="username"  
+            rules={[({ getFieldValue }) => ({
+              async validator(rule, value) {
+                if(value || loginType === 'tel') {
+                  return Promise.resolve();
+                } 
+                return Promise.reject('请输入用户名');
+                
+              }
+            })]}>
+              <Input
+                prefix={<UserOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
+                placeholder="用户名"
+              />
+          </Form.Item>
+          <Form.Item name="password" rules={[({ getFieldValue }) => ({
+              async validator(rule, value) {
+                if(value || loginType === 'tel') {
+                  return Promise.resolve();
+                } 
+                return Promise.reject('请输入密码');
+                
+              }
+            })]}>
+              <Input
+                prefix={<LockOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
+                type="password"
+                placeholder="密码"
+              />
+          </Form.Item>
+          <Form.Item name="captcha" rules={[({ getFieldValue }) => ({
+              async validator(rule, value) {
+                if(value || loginType === 'tel') {
+                  return Promise.resolve();
+                } 
+                return Promise.reject('验证码');
+                
+              }
+            })]}>
+              <Row justify="space-between">
+                <Col span="18">
+                <Input
+                prefix={<LockOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
+                placeholder="验证码"
+                />
+                </Col>
+                <Col  span="4">
+                  <img className="login-cap" src={cap} onClick={() => {
+                    fetchCap();
+                  }}></img>
+                </Col>
+              </Row>
+          </Form.Item>
+        </Tabs.TabPane>
+        {
+          props.type === 'patient' ? <Tabs.TabPane tab="短信验证码" key="tel">
+          <Form.Item name="tel" hasFeedback
+            rules={[({ getFieldValue }) => ({
+              async validator(rule, value) {
+                if((/^1(3|4|5|6|7|8|9)\d{9}$/.test(value)) || loginType === 'password') {
+                  return Promise.resolve();
+                } 
+                return Promise.reject('请输入正确手机号');
+              }
+            })]}>
+              <Input
+                prefix={<LockOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
+                placeholder="输入手机号"
+              />
+          </Form.Item>
+          <Form.Item name="phoneCaptcha" rules={[{required: true, message: '请输入验证码'}]}>
+            <Row justify="space-between">
+              <Col span="17">
+                <Input  placeholder="输入验证码"/>
+              </Col>
+              <Col >
+                <Button 
+                disabled={disabledCap}
+                onClick={async () => {
+                  if(!props.form.getFieldValue('tel')) {
+                    message.error('输入手机号');
+                    return;
+                  }
+                  const res:any = await userClient.getPhone({
+                    type: 'login',
+                    mobile: props.form.getFieldValue('tel')
+                  });
+                  if(res.code === 0) {
+                    setDisabledCap(true)
+                  } else {
+                    message.error('短信发送失败');
+                  }
+                }}>{ disabledCap ? `(${second}s)后重新发送` :
+                "获取验证码"
+                }</Button>
+              </Col>
+            </Row>
+          </Form.Item>
+        </Tabs.TabPane>: null
+        }
+      </Tabs>
       <Form.Item>
-        {getFieldDecorator('username', {
-          rules: [{ required: true, message: '至少得告诉我你叫啥呀？!' }],
-        })(
-          <Input
-            prefix={<UserOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
-            placeholder="用户名"
-          />,
-        )}
-      </Form.Item>
-      <Form.Item>
-        {getFieldDecorator('password', {
-          rules: [{ required: true, message: '请输入密码呀!不然咋登录' }],
-        })(
-          <Input
-            prefix={<LockOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
-            type="password"
-            placeholder="密码"
-          />,
-        )}
-      </Form.Item>
-      <Form.Item>
-        {getFieldDecorator('captcha', {
-          rules: [{ required: true, message: '请输入验证码' }],
-        })(
-          <Row justify="space-between">
-            <Col span="18">
-            <Input
-            prefix={<LockOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
-            placeholder="验证码"
-            />
-            </Col>
-            <Col  span="4">
-              <img className="login-cap" src={cap} onClick={() => {
-                fetchCap();
-              }}></img>
-            </Col>
-          </Row>
-        )}
-      </Form.Item>
-      <Form.Item>
-        <div>
-          {getFieldDecorator('remember', {
-            valuePropName: 'checked',
-            initialValue: true,
-          })(<Checkbox>记住密码</Checkbox>)}
-          <a className="login-form-forgot" href="">
-            忘记密码
-          </a>
-        </div>
         {
           props.type === 'worker' ? null : 
           <div>
-          Or <a onClick={() => {
+          <a className="login-form-forgot" href="">
+            忘记密码
+          </a> Or <a onClick={() => {
             props.changeStatus && props.changeStatus('reg');
           }}>快去注册!</a>
         </div>
@@ -105,4 +185,4 @@ function LoginForm(props: Props) {
 }
 
 
-export const WrappedLoginForm = Form.create<Props>({ name: 'user_login' })(LoginForm);
+export const WrappedLoginForm = LoginForm;

@@ -20,8 +20,8 @@ type Props = {
 export function LoginRegModal(props: Props) {
   let [action,changeStatus]  = useState<string>('login');
   let visible = props.visible;
-  let loginForm: any;
   let [regForm] = Form.useForm();
+  let [loginForm] = Form.useForm();
 
   const changeStatusFunc = (aciton:string) => {
     changeStatus(aciton);
@@ -31,45 +31,54 @@ export function LoginRegModal(props: Props) {
     action === 'login' ? login() : register();
   }
 
-  const  login = () => {
-    loginForm.validateFields((err: any, values: { username: string; password: string; captcha: string | number }) => {
-      if(!err) {
-        // console.log()
-        userClient.login({
-            username: values.username,
-            password: values.password,
-            captcha: values.captcha
-          }, 1, 0).then((res) => {
-          const res2: any = res;
-          if(res2.code === 0) {
-            jsCookie.set('the_docters_token', res2.data.token, { expires: 30, path: '/' });
-            props.loginSuccess(res2.data.user);
-            props.toggleModalVisable(false);
-            
-            message.success({
-              content: res2.message,
-              duration: 2,
-            });
-          } else {
-            message.error({
-              content: res2.message,
-              duration: 2,
-            });
-          }
-        })
+  const  login = async () => {
+    try { 
+      const values = await loginForm.validateFields();
+      
+      let userInfo: any = {};
+      let loginType = 0;
+      if (values.tel) {
+        userInfo = {
+          tel: values.tel,
+          loginPhoneCaptcha: values.phoneCaptcha
+        }
+        loginType = 1;
+      } else {
+        userInfo = {
+          username: values.username,
+          password: values.password,
+          captcha: values.captcha
+        }
+      }
+    
+      userClient.login(userInfo, 1, loginType).then((res) => {
+      const res2: any = res;
+      if(res2.code === 0) {
+        jsCookie.set('the_docters_token', res2.data.token, { expires: 30, path: '/' });
+        props.loginSuccess(res2.data.user);
+        props.toggleModalVisable(false);
+        
+        message.success({
+          content: res2.message,
+          duration: 2,
+        });
       } else {
         message.error({
-          content: '信息不完善'
-        })
+          content: res2.message,
+          duration: 2,
+        });
       }
     })
+    } catch (E) {
+      console.log('Failed:', E);
+    }
   }
 
   const register = async () =>  {
     try {
       const values = await regForm.validateFields();
       console.log('Success:', values);
-      const {username, password, name, idcard, sex, age, tel} = values;
+      const {username, password, name, idcard, sex, age, tel, phoneCaptcha} = values;
         userClient.register({
           username,
           password,
@@ -77,7 +86,8 @@ export function LoginRegModal(props: Props) {
           idcard,
           sex,
           age,
-          tel
+          tel,
+          phoneCaptcha
         }).then((res) => {
           const res2: any = res;
           if(res2.code === 0) {
@@ -89,10 +99,7 @@ export function LoginRegModal(props: Props) {
               duration: 2,
             });
           } else {
-            message.error({
-              content: res2.message,
-              duration: 2,
-            });
+            message.error(res2.message);
           }
         })
     } catch (errorInfo) {
@@ -111,7 +118,7 @@ export function LoginRegModal(props: Props) {
     >
     {
       action === 'login' ? 
-      <WrappedLoginForm  ref={(c)=> loginForm = c } changeStatus={changeStatusFunc} type='patient'></WrappedLoginForm> : 
+      <WrappedLoginForm  form={loginForm} changeStatus={changeStatusFunc} type='patient'></WrappedLoginForm> : 
       <WrappedRegForm form={regForm} changeStatus={changeStatusFunc}></WrappedRegForm>
     }
   </Modal>

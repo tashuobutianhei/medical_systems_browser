@@ -9,6 +9,7 @@ import jsCookie from 'js-cookie';
 
 import 'antd/dist/antd.css'
 import './index.scss'
+import { useForm } from 'antd/lib/form/util';
 
 type Props = {
   userType: number
@@ -20,41 +21,49 @@ type Props = {
 
 export function LoginModal(props: Props) {
   let visible = props.visible;
-  let loginForm: any;
+  let [loginForm] = useForm();
 
-  const  login = () => {
-    loginForm.validateFields((err: any, values: { username: string; password: string; captcha: string | number }) => {
-      if(!err) {
-        userClient.login({
+  const  login = async () => {
+    try {
+      const values = await loginForm.validateFields();
+
+      let userInfo: any = {};
+      let loginType = 0;
+      if (values.tel) {
+        userInfo = {
+          tel: values.tel,
+          loginPhoneCaptcha: values.phoneCaptcha
+        }
+        loginType = 1;
+      } else {
+        userInfo = {
           username: values.username,
           password: values.password,
           captcha: values.captcha
-        }, props.userType, 0).then((res) => {
-          const res2: any = res;
-          if(res2.code === 0) {
-            jsCookie.set('the_docters_token', res2.data.token, { expires: 30, path: '/' });
-            props.toggleModalVisable(false);
-            props.loginSuccess(res2.data.user);
-            
-            message.success({
-              content: res2.message,
-              duration: 2,
-            });
-          } else {
-            message.error({
-              content: res2.message,
-              duration: 2,
-            });
-          }
-        })
-      } else {
-        message.error({
-          content: '登陆失败',
-          duration: 2,
-        });
+        }
       }
-      
-    })
+    
+      userClient.login(userInfo, props.userType, loginType).then((res) => {
+        const res2: any = res;
+        if(res2.code === 0) {
+          jsCookie.set('the_docters_token', res2.data.token, { expires: 30, path: '/' });
+          props.toggleModalVisable(false);
+          props.loginSuccess(res2.data.user);
+          
+          message.success({
+            content: res2.message,
+            duration: 2,
+          });
+        } else {
+          message.error({
+            content: res2.message,
+            duration: 2,
+          });
+        }
+      })
+    } catch(e) {
+      console.log(e);
+    }
   }
 
   return(
@@ -66,7 +75,7 @@ export function LoginModal(props: Props) {
     onOk={login}
     onCancel={()=> props.toggleModalVisable(false)}
     >
-      <WrappedLoginForm  ref={(c)=> loginForm = c } type='worker'></WrappedLoginForm>
+      <WrappedLoginForm  form={loginForm} type='worker'></WrappedLoginForm>
   </Modal>
   )
 }

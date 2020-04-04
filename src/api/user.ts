@@ -11,7 +11,7 @@ type loginPassword= {
 
 type loginTel= {
   tel: string
-  captcha: string | number
+  loginPhoneCaptcha: string | number
 }
 
 const userClient =  {
@@ -39,6 +39,9 @@ const userClient =  {
   },
   checkUserInfo(params:{key: string, value: string}) {
     return get('/users/checkUserInfo', params);
+  },
+  getPhone(params) {
+    return get('/users/phone', params);
   }
 };
 
