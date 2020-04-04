@@ -19,6 +19,7 @@ type Props = {
   updatePatient: any,
   updatePatientAssay: any
   patientCaseInfo: any
+  which? : string
 }
 
 type assayType = {
@@ -45,7 +46,7 @@ function DoctorWorkTable (props: Props & RouteComponentProps) {
   }, []);
 
   useEffect(() => {
-    console.log(props.patientCaseInfo)
+    // console.log(props.patientCaseInfo)
   }, [props.patientCaseInfo])
 
   // 判断模式
@@ -66,6 +67,9 @@ function DoctorWorkTable (props: Props & RouteComponentProps) {
         default:
           break;
       }
+      if (props.which === 'patient') {
+        modeString = 'patient'
+      }
       setMode(modeString);      
       if(modeString === 'patient' || modeString === 'hospital') {
         initHooksVal(patientCase);
@@ -82,7 +86,7 @@ function DoctorWorkTable (props: Props & RouteComponentProps) {
       'Hospitalization': patientCase.HospitalizationId == '-1' ? false : true
     })
 
-    if (patientCase.assayId.length === 0) {
+    if (!patientCase.assayId || (patientCase.assayId && patientCase.assayId.length === 0)) {
       return;
     }
     const assayIds:any = await patientCaseClient.getAssayById({

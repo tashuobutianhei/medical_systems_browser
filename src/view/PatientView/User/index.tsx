@@ -82,7 +82,7 @@ function User (props: RouteComponentProps) {
           <Route exact path="/Patient/user/userInfo" component={UserInfo}/>
           <Route exact path="/Patient/user/userInfo/:caseId" component={() => {
                 return(
-                  <DoctorWorkTable patientCase={patientCases} examination={examination}></DoctorWorkTable>
+                  <DoctorWorkTable patientCase={patientCases} examination={examination} which="patient"></DoctorWorkTable>
                 )
               }}/>
           <Redirect to='/Patient/user/userInfo'></Redirect>
