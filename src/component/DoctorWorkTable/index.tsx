@@ -46,7 +46,7 @@ function DoctorWorkTable (props: Props & RouteComponentProps) {
   }, []);
 
   useEffect(() => {
-    // console.log(props.patientCaseInfo)
+    console.log(props.patientCaseInfo)
   }, [props.patientCaseInfo])
 
   // 判断模式
@@ -85,6 +85,13 @@ function DoctorWorkTable (props: Props & RouteComponentProps) {
       'medicine': patientCase.medicine,
       'Hospitalization': patientCase.HospitalizationId == '-1' ? false : true
     })
+    if (!patientCase.assayId) {
+      props.updatePatientAssay([{
+        assayId: 0,
+        examinationId: null,
+        examinationResult: ''
+      }], '', 'set');
+    };
 
     if (!patientCase.assayId || (patientCase.assayId && patientCase.assayId.length === 0)) {
       return;
@@ -277,7 +284,7 @@ function DoctorWorkTable (props: Props & RouteComponentProps) {
                       <Select 
                       style ={{ width: 160 }} 
                       disabled={mode !== 'doctor'}
-                      defaultValue={assayItem.assayId}
+                      defaultValue={assayItem.examinationId}
                       onChange={(val)=>{
                         assaySelectChange(val, assayItem.assayId);
                       }}>
