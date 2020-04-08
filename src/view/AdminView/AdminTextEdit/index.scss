@@ -1,0 +1,23 @@
+.adminText-edit{
+  position: relative;
+
+  &-title {
+    font-weight: 500;
+    width: 70%;
+    margin: 10px auto;
+    
+  }
+
+   &-button {
+     position: absolute;
+     right: 10px;
+     bottom: -30px;
+   }
+}
+
+.disabled {
+  pointer-events: none;
+  cursor: not-allowed;
+  background-color: #f5f5f5;
+  color: rgba(0, 0, 0, 0.25);
+}

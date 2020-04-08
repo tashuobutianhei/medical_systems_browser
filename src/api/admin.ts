@@ -43,7 +43,31 @@ const adminClient =  {
     examinationId: number | string
   }) {
     return post('/admin/exam', data, 'delete');
-  }
+  },
+  // 文章系统
+  addArtcle(data: {
+    value: string,
+    title: string,
+    type: number
+  }) {
+    return post('/admin/article', data);
+  },
+  deleteArtcle(data: {
+    textId: number
+  }) {
+    return post('/admin/article', data, 'delete');
+  },
+  updateArtcle(data: {
+    textId: number
+    value: string,
+    title: string,
+  }) {
+    return post('/admin/article', data, 'put');
+  },
+  findArtcle() {
+    return get('/admin/article');
+  },
+
 };
 
 export default adminClient;

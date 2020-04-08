@@ -10,6 +10,8 @@ import jsCookie from 'js-cookie';
 import AdminInfo from '../AdminInfo/index';
 import AdminUser from '../AdminUser/index';
 import AdminDepartment from '../AdminDepartment/index'
+import AdminText from '../AdminText/index';
+import AdminTextItem from '../AdminTextEdit/index';
 
 import 'antd/dist/antd.css'
 import './index.scss'
@@ -73,6 +75,7 @@ function Doctor (props: userType & RouteComponentProps) {
           <Menu.Item key="User">注册用户</Menu.Item>
           <Menu.Item key="Department">科室管理</Menu.Item>
           <Menu.Item key="Info">信息维护</Menu.Item>
+          <Menu.Item key="Text">公告/文章</Menu.Item>
           {/* {
             userInfo.position === 'director' ? 
             <Menu.Item key="Schedule">排班</Menu.Item>: null
@@ -95,6 +98,8 @@ function Doctor (props: userType & RouteComponentProps) {
             <Route path="/Admin/User" component={AdminUser}/>
             <Route path="/Admin/Department" component={AdminDepartment} />
             <Route path="/Admin/Info" component={AdminInfo} />
+            <Route path="/Admin/Text" component={AdminText} />
+            <Route path="/Admin/TextEdit/:textId" component={AdminTextItem} />
             <Redirect to='/Admin/User'></Redirect>
         </Switch>
       </div>
