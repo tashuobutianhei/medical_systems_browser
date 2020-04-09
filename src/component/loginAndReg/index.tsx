@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import {Modal, message, Form} from 'antd';
 
 import {WrappedLoginForm} from '../LoginForm/index';
@@ -23,9 +23,9 @@ export function LoginRegModal(props: Props) {
   let [regForm] = Form.useForm();
   let [loginForm] = Form.useForm();
 
-  const changeStatusFunc = (aciton:string) => {
+  const changeStatusFunc = useCallback((aciton:string) => {
     changeStatus(aciton);
-  }
+  }, []);
 
   const handleOk = () => {
     action === 'login' ? login() : register();
@@ -62,6 +62,9 @@ export function LoginRegModal(props: Props) {
           content: res2.message,
           duration: 2,
         });
+
+        loginForm.resetFields();
+        changeStatus('login')
       } else {
         message.error({
           content: res2.message,
@@ -98,6 +101,8 @@ export function LoginRegModal(props: Props) {
               content: res2.message,
               duration: 2,
             });
+            regForm.resetFields();
+            changeStatus('login')
           } else {
             message.error(res2.message);
           }
@@ -114,7 +119,12 @@ export function LoginRegModal(props: Props) {
     cancelText="算了"
     visible={visible}
     onOk={handleOk}
-    onCancel={()=> props.toggleModalVisable(false)}
+    onCancel={()=> {
+      props.toggleModalVisable(false);
+      loginForm.resetFields();
+      regForm.resetFields();
+      changeStatus('login');
+    }}
     >
     {
       action === 'login' ? 
