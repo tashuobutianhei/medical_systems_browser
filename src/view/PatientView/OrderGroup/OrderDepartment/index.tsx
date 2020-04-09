@@ -20,14 +20,11 @@ function Order (props: any) {
                   <Col key={item.departmentId} 
                     span={4}
                     onClick={()=>{
-                      // onChecked(item);
-                      // const checkedDepartment = props.department.find(item => item.departmentId == checked);
                       props.nextStep({
                         'department': item
                       });
                     }}
                     className={['order-department-content-item',
-                    // item.departmentId == checked ? 'order-department-content-itemChecked' : ''
                     ].join(' ')}>
                     {item.departmentName}
                   </Col>

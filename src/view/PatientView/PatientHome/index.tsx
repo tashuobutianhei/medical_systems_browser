@@ -4,8 +4,10 @@ import CONST from '../../../common/const';
 import {CSSTransition} from 'react-transition-group';
 import { HomeTwoTone, HeartTwoTone, ProfileTwoTone, IdcardTwoTone, } from '@ant-design/icons';
 import departmentClient from '../../../api/department';
+import adminClient from '../../../api/admin';
 import doctorClient from '../../../api/doctor';
 import patientCaseClient from '../../../api/patientCase';
+import moment from 'moment';
 
 import { ForwardFilled, RightOutlined } from '@ant-design/icons';
 import { Carousel, Row, Col, Button, message, Statistic,BackTop } from 'antd';
@@ -17,8 +19,6 @@ import { fetchInfoALLGQL } from '../../../api/graphql/gql';
 import 'antd/dist/antd.css'
 import './index.scss'
 
-// const CarouselList = ['lun1.jpg','lun2.jpg', 'lun3.jpg'];
-
 const GudieList = [
   {
     name: '科室门诊表',
@@ -28,17 +28,46 @@ const GudieList = [
   },
   {
     name: '就医须知',
-    color: '#dac594',
+    color: '#fff',
     textColor: 'black',
     path: 'Guide'
+  },
+  {
+    name:'img',
+    path:'img1.jpg'
+  },
+  {
+    name:'img',
+    path:'img2.jpg'
+  },
+  {
+    name:'img',
+    path:'img3.jpg'
+  },
+  {
+    name:'img',
+    path:'img4.jpg'
   },
   {
     name: '值班医师',
     color: '#306f3d',
     textColor: 'white',
     path: 'DoctorInfo'
+  },
+  {
+    name: '预约挂号',
+    color: '#dac594',
+    textColor: 'black',
+    path: 'Order'
   }
 ]
+
+type artcle = {
+  title: string,
+  update: string
+  textId: number
+};
+
 function Home (props: any) {
 
   const [departmentList, setDepartmentList] = useState<any>([]); // 科室列表
@@ -48,11 +77,13 @@ function Home (props: any) {
 
   const [departmentInfo, setDepartmentInfo] = useState<any>({}); // 当前激活科室信息
   const [doctorToday, setDoctorToday] = useState<any>([]);// 今日值班医生列表
+  const [CarouselList, setCarouselList] = useState<string[]>([]); // 轮播图片
 
-  const [CarouselList, setCarouselList] = useState<string[]>([]);
+  const [artcleList0, setArtcleList0] = useState<artcle[]>([]);
+  const [artcleList1, setArtcleList1] = useState<artcle[]>([]);
 
   const fetchData = async() => {
-
+    // 获取数据
     const patientCaseList:any = await patientCaseClient.getPatientAll();
 
     if(patientCaseList.code === 0) {
@@ -72,9 +103,27 @@ function Home (props: any) {
         content: '服务错误'
       })
     }
+
+    const res:any = await adminClient.findArtcle();
+    const array0 = [];
+    const array1 = [];
+    if(res.code === 0) {
+      res.data.forEach(item => {
+        if(item.type == 0 && array0.length < 8) {
+          array0.unshift(item);
+        } else if (item.type == 1 && array1.length < 8){
+          array1.unshift(item);
+        }
+      });
+      setArtcleList0(array0);
+      setArtcleList1(array1);
+    } else {
+      message.error('服务错误哦');
+    }
   }
 
   const reduceTodaySchedule = (todaySchedule) => {
+    // 计算今日值班
     let TodaySchedule = [];
     todaySchedule && todaySchedule.forEach(item => {
       if(item.doctors) {
@@ -136,7 +185,10 @@ function Home (props: any) {
   }, [props]);
 
   return (
+    <>
+    <div className="PatientHome-bg"></div>
     <div className="PatientHome">
+     
       <Carousel autoplay={true} effect="fade" className="PatientHome-Carousel">
         {
           CarouselList.length > 0 ?
@@ -158,49 +210,101 @@ function Home (props: any) {
         <div className="PatientHome-body-gudie">
           {
             GudieList.map((item, index) => {
-              return (
-                <div key={index} style={{color: item.textColor, backgroundColor: item.color}} onClick={()=>{
-                  props.history.push(`/Patient/${item.path}`)
-                }}>
-                  <span>{item.name}</span>
-                </div>
-              )
+              if (item.name === 'img') {
+                return(
+                  <img className="PatientHome-body-gudie-item" src={`/img/${item.path}`}></img>
+                )
+              } else {
+                return(
+                  <div className="PatientHome-body-gudie-item"
+                  key={index} style={{color: item.textColor, backgroundColor: item.color}} onClick={()=>{
+                    props.history.push(`/Patient/${item.path}`)
+                  }}>
+                    <span>{item.name}</span>
+                  </div>
+                )
+              }
             })
           }
         </div>
       </CSSTransition>
 
-      <div className="PatientHome-body-department">
-   
-        <Row gutter={16}>
-          <Col span={6}>
-            <Statistic title="科室总数" value={departmentList && departmentList.length} prefix={<HomeTwoTone />} />
-          </Col>
+      <div className="PatientHome-body-data">
+        <div className="PatientHome-body-data-body">
+          <p className="PatientHome-body-department-gudie" style={{
+            color: 'black'
+          }}> 数据统计</p>
+          <Row gutter={16}>
+            <Col span={6}>
+              <Statistic title="科室总数" value={departmentList && departmentList.length} prefix={<HomeTwoTone />} />
+            </Col>
 
-          <Col span={6}>
-            <Statistic title="医生力量" value={doctorList && doctorList.length} prefix={<HeartTwoTone />} />
-          </Col>
+            <Col span={6}>
+              <Statistic title="医生力量" value={doctorList && doctorList.length} prefix={<HeartTwoTone />} />
+            </Col>
 
-          <Col span={6}>
-            <Statistic title="挂号统计" value={patientCaseList && patientCaseList.length} prefix={<ProfileTwoTone />} />
-          </Col>
+            <Col span={6}>
+              <Statistic title="挂号统计" value={patientCaseList && patientCaseList.length} prefix={<ProfileTwoTone />} />
+            </Col>
 
-          <Col span={6}>
-            <Statistic title="今日值班" value={reduceTodaySchedule(todaySchedule).length} prefix={<IdcardTwoTone />} />
+            <Col span={6}>
+              <Statistic title="今日值班" value={reduceTodaySchedule(todaySchedule).length} prefix={<IdcardTwoTone />} />
+            </Col>
+          </Row>
+        </div>
+      </div>
+
+      <div className="PatientHome-body-arctle">
+        <Row justify="space-between" >
+          <Col md={12} className="PatientHome-body-arctle-item" xs={24}>
+            <div className="PatientHome-body-arctle-item-header">
+              <span style={{
+                borderBottom: '4px solid #0065B3'
+              }}>医院动态</span>
+              <span>更多</span>
+            </div>
+            <div>
+              {
+                artcleList0.map(item => {
+                  return (
+                    <p key={item.textId}>
+                      <span>{item.title}</span>
+                      <span>{moment(item.update).format('YYYY年MM月DD日')}</span>
+                    </p>
+                  )
+                })
+              } 
+            </div>
+          </Col>
+          <Col md={11} className="PatientHome-body-arctle-item"  xs={24}>
+            <div className="PatientHome-body-arctle-item-header">
+                <span style={{
+                borderBottom: '4px solid #0065B3'
+              }}>医疗文章</span>
+                <span>更多</span>
+              </div>
+              <div>
+              {
+                artcleList1.map(item => {
+                  return (
+                    <p key={item.textId}>
+                      <span>{item.title}</span>
+                      <span>{moment(item.update).format('YYYY年MM月DD日')}</span>
+                    </p>
+                  )
+                })
+              } 
+            </div>
           </Col>
         </Row>
-
       </div>
 
 
       <div className="PatientHome-body-department">
         <p className="PatientHome-body-department-gudie"  onClick={()=>{
           props.history.push(`/Patient/Department`)}
-        }>
-          科室导航 
-          <ForwardFilled />
-        </p>
-        <Row gutter={16}>
+        }> 科室导航  </p>
+        <Row gutter={16} className="PatientHome-body-department-body">
           <Col span={8} className="PatientHome-body-department-img">
             <img src="/img/department.jpeg"></img>
             <div className="PatientHome-body-department-img-info">
@@ -209,24 +313,25 @@ function Home (props: any) {
             </div>
           </Col>
           <Col span={16} className="PatientHome-body-department-info">
-            {
-              departmentList && departmentList.map((item,index) =>{
-                return (
-                  <Button 
-                  onMouseEnter={(e)=>{
-                    mouseEnterDepartment(item.departmentId)
-                  }}
-                  onClick={(e) => {
-                    props.history.push(`/Patient/DepartmentItem/${item.departmentId}`);
-                  }}
-                  type="dashed" size="large" 
-                  key={item.departmentId} style={{width: '130px', marginRight: '8px'}}>
-                    {item.departmentName}
-                    <RightOutlined />
-                  </Button>
-                );
-              })
-            }
+            <Row>
+              {
+                departmentList && departmentList.map((item,index) =>{
+                  return (
+                    <Col key={item.departmentId} style={{width: '130px', marginRight: '8px'}}> 
+                      <a 
+                        onMouseEnter={(e)=>{
+                          mouseEnterDepartment(item.departmentId)
+                        }}
+                        onClick={(e) => {
+                          props.history.push(`/Patient/DepartmentItem/${item.departmentId}`);
+                        }}
+                        type="dashed" 
+                      >{item.departmentName}</a>
+                    </Col>
+                  );
+                })
+              }
+            </Row>
           </Col>
         </Row>
       </div>
@@ -256,6 +361,7 @@ function Home (props: any) {
       </div>
       </div> 
     </div>
+    </>
   );
 }
 
