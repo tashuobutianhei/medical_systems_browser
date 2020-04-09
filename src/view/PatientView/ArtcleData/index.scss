@@ -1,0 +1,15 @@
+.actcleData {
+  width: 60%;
+  margin: 30px auto;
+  &-title {
+    text-align: center;
+  } 
+  &-value {
+    border: 1px rgba(0, 0, 0, .3) solid;
+    min-height: 600px;
+  } 
+  &-update {
+    margin-top: 10px;
+    float: right;
+  }
+}

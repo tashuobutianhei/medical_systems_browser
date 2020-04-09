@@ -17,6 +17,7 @@ import Guide from '../Guide';
 import DoctorItem from '../DoctorItem';
 import DepartmentItem from '../DepartmentItem';
 import User from '../User';
+import ArtcleData from '../ArtcleData';
 
 import {LoginRegModal as LogRegFormModal} from '../../../component/loginAndReg'
 import { userLogin, userLogout } from '../../../action/user';
@@ -116,6 +117,7 @@ function Patient (props: PatientType & RouteComponentProps) {
           theme="dark"
           mode="horizontal"
           defaultSelectedKeys={[key]}
+          key = {props.location.pathname.split('/')[2]}
           onClick={(e: any) => {
             props.history.push(`/Patient/${e.key}`)
           }}
@@ -154,7 +156,9 @@ function Patient (props: PatientType & RouteComponentProps) {
     <Content className="patient-content">
       <div className="patient-route">
       <Switch> 
+         
           <Route exact path="/Patient/Home" component={PatientHome}/>
+
           <Route path="/Patient/order" component={Order} />
           <Route path="/Patient/doctorInfo" component={DoctorInfo} />
           <Route path="/Patient/department" component={Department}/>
@@ -164,6 +168,8 @@ function Patient (props: PatientType & RouteComponentProps) {
   
           <Route path="/Patient/DoctorItem/:workerId" component={DoctorItem}/>
           <Route path="/Patient/DepartmentItem/:departmentId" component={DepartmentItem}/>
+
+          <Route path="/Patient/Atrcle/:textId" component={ArtcleData}/>
           <Redirect to='/Patient/Home'></Redirect>
         </Switch>
       </div>

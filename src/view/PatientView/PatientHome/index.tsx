@@ -267,7 +267,9 @@ function Home (props: any) {
               {
                 artcleList0.map(item => {
                   return (
-                    <p key={item.textId}>
+                    <p key={item.textId} onClick={() => {
+                      props.history.push(`/Patient/Atrcle/${item.textId}`)
+                    }}>
                       <span>{item.title}</span>
                       <span>{moment(item.update).format('YYYY年MM月DD日')}</span>
                     </p>
@@ -287,7 +289,9 @@ function Home (props: any) {
               {
                 artcleList1.map(item => {
                   return (
-                    <p key={item.textId}>
+                    <p key={item.textId} onClick={() => {
+                      props.history.push(`/Patient/Atrcle/${item.textId}`)
+                    }}>
                       <span>{item.title}</span>
                       <span>{moment(item.update).format('YYYY年MM月DD日')}</span>
                     </p>
