@@ -51,7 +51,6 @@ const homeList: Props[] = [{
 function Home (props: PatientType) {
   return (
     <>
-
     <div className="modal"> </div>
     <div className="home">
       <div className="home-tilte">
@@ -60,10 +59,11 @@ function Home (props: PatientType) {
       </div>
       <div className="home-body">
         {homeList.map((item, index) => (
-          <HomeEnterCrad {...item} key = {index}/>
+          <div key = {index} className="home-body-item">
+            <HomeEnterCrad {...item}  />
+          </div>
         ))}
       </div>
-
     </div>
     </>
   )
