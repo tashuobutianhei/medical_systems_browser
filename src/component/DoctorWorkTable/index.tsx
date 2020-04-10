@@ -70,20 +70,22 @@ function DoctorWorkTable (props: Props & RouteComponentProps) {
       if (props.which === 'patient') {
         modeString = 'patient'
       }
-      setMode(modeString);      
-      if(modeString === 'patient' || modeString === 'hospital') {
-        initHooksVal(patientCase);
-      }
+      setMode(modeString);     
+      initHooksVal(patientCase); 
+      // if(modeString === 'patient' || modeString === 'hospital') {
+      //   initHooksVal(patientCase);
+      // }
     }
   }, [patientCase])
 
 
   const initHooksVal = async (patientCase: any) => {
+    console.log(patientCase.medicine)
     props.updatePatient({
       'doctorView': patientCase.doctorView,
       'result': patientCase.result,
-      'medicine': patientCase.medicine,
-      'Hospitalization': patientCase.HospitalizationId == '-1' ? false : true
+      'medicine': patientCase.medicine || '',
+      'Hospitalization': patientCase.HospitalizationId == '-1' || patientCase.HospitalizationId == null ? false : true
     })
     if (!patientCase.assayId) {
       props.updatePatientAssay([{
@@ -146,10 +148,11 @@ function DoctorWorkTable (props: Props & RouteComponentProps) {
     props.updatePatient(obj);
   }
 
-  const postDoctor = async (caseId: any) => {
+  const postDoctor = async (caseId: any, type: string) => {
     const {doctorView, result, medicine, Hospitalization, assay} = props.patientCaseInfo;
       
     const res:any = await patientCaseClient.setPatientCaseModeDoctor({
+      type, // 保存和提交
       doctorView,
       result,
       medicine,
@@ -172,7 +175,7 @@ function DoctorWorkTable (props: Props & RouteComponentProps) {
     }
   }
 
-  const postHos = async (caseId: any) => {
+  const postHos = async (caseId: any, type: string) => {
     const hospitalList = props.patientCaseInfo.hospitalList.filter(item => {
         return item.type === 'set';
       } 
@@ -180,6 +183,7 @@ function DoctorWorkTable (props: Props & RouteComponentProps) {
 
     console.log(hospitalList);
     const res:any = await patientCaseClient.setPatientCaseModeHos({
+      type, // 保存和提交
       'caseId': caseId.caseId,
       hospitalList: JSON.stringify(hospitalList),
     });
@@ -196,14 +200,14 @@ function DoctorWorkTable (props: Props & RouteComponentProps) {
     }
   }
 
-  const clickOk = async () => {
+  const clickOk = async (type = 'submit') => {
     let caseId: { caseId?: any; };
     if(Object.keys(props.match.params).indexOf('caseId') > -1) {
-      caseId = props.match.params
+      caseId = props.match.params;
       if( mode === 'doctor') {
-        postDoctor(caseId);
+        postDoctor(caseId, type);
       } else if( mode === 'hospital') {
-        postHos(caseId);
+        postHos(caseId, type);
       }
     }
   }
@@ -347,19 +351,20 @@ function DoctorWorkTable (props: Props & RouteComponentProps) {
           <span className="workTable-label">处方药物:</span>
           <div className="workTable-textArea" style={{display: 'inlineBlock'}}>
               <Select 
-              mode="tags" 
-              disabled={mode !== 'doctor'}
-              style={{ width: '100%' }} 
-              placeholder='请对症开药'
-              value={props.patientCaseInfo.medicine}
-              onChange={(val) => {
-                let medicineVal = '';
-                if(Array.isArray(val)) {
-                  medicineVal = val.join(',');
-                }
-                FormChangeHandle('medicine', medicineVal);
-              }}
-              tokenSeparators={[',']}>
+                mode="tags" 
+                tokenSeparators={[',']}
+                disabled={mode !== 'doctor'}
+                style={{ width: '100%' }} 
+                placeholder='请对症开药'
+                value={props.patientCaseInfo.medicine.split(',').filter(item => item.length > 0)}
+                onChange={(val) => {
+                  let medicineVal = '';
+                  if(Array.isArray(val)) {
+                    medicineVal = val.join(',');
+                  }
+                  FormChangeHandle('medicine', medicineVal);
+                }}
+              >
               </Select>
           </div>
         </div>
@@ -388,14 +393,21 @@ function DoctorWorkTable (props: Props & RouteComponentProps) {
         : null
       }
       <div className="workTable-col">
-        <Button type='primary' 
-        onClick={clickOk}
+      <Button type="default" onClick={() => {clickOk('save')}}
         disabled={mode === 'patient'}
         style={{
-          width: '100%',
+          width: '50%',
           height: '40px',
           fontSize: '20px',
           fontWeight: 'bolder'
+        }}>保存</Button>
+        <Button type='primary' onClick={() => {clickOk()}}
+          disabled={mode === 'patient'}
+          style={{
+            width: '50%',
+            height: '40px',
+            fontSize: '20px',
+            fontWeight: 'bolder'
           }}>确认</Button>
       </div>
     </div>

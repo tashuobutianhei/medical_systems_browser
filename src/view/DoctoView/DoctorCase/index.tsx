@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Layout, Menu, message } from 'antd';
+import { Layout, Menu, message, Input } from 'antd';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter, Route, Switch } from 'react-router-dom';
 import patientCaseClient from '../../../api/patientCase';
@@ -15,7 +15,8 @@ const { SubMenu } = Menu;
 
 function DoctorInfo (props: any & RouteComponentProps) {
 
-  const [patientCases, setPatientCases] = useState<any>({});
+  const [allpatientCases, setAllpatientCases] = useState<any>({}); // 全部
+  const [patientCases, setPatientCases] = useState<any>({}); // 用于筛选
   const [examination, setExaminationRes] = useState<any>({});
 
   useEffect(() => {
@@ -26,6 +27,9 @@ function DoctorInfo (props: any & RouteComponentProps) {
         setPatientCases(res.data.filter(item => {
           return item.status === 1 || item.status === 3;
         }))
+        setAllpatientCases(res.data.filter(item => {
+          return item.status === 1 || item.status === 3;
+        }));
       } else {
         message.error({
           content: '服务错误'
@@ -44,11 +48,22 @@ function DoctorInfo (props: any & RouteComponentProps) {
     fetchDate();
   }, []);
 
+  const search = (val: string) => {
+    if(!val) {
+      setPatientCases(allpatientCases);
+    } else {
+      setPatientCases(allpatientCases.filter(item => {
+        return (new RegExp(val).test(item.caseId) || new RegExp(val).test(item.patientInfo.name));
+      }))
+    }
+  }
+
 
   return (
     <div>
       <Layout className="doctor-schedule">
         <Sider width={200} style={{ background: '#fff' }}> 
+        <Input.Search key={'search'} placeholder="根据病例编号和姓名搜索" onSearch={search} />
         <Menu
           mode="inline"
           // defaultSelectedKeys={[getScheduleDateList()[0].toDateString()]}

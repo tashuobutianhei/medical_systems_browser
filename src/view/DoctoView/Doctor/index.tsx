@@ -70,6 +70,7 @@ function Doctor (props: userType & RouteComponentProps) {
       <Menu
           theme="dark"
           mode="horizontal"
+          key={props.location.pathname.split('/')[2]}
           defaultSelectedKeys={[key]}
           onClick={(e: any) => {
             props.history.push(`/Doctor/${e.key}`)

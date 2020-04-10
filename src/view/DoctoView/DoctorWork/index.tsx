@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Layout, Menu, message } from 'antd';
+import { Layout, Menu, message, Input } from 'antd';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter, Route, Switch } from 'react-router-dom';
 import patientCaseClient from '../../../api/patientCase';
@@ -16,57 +16,80 @@ const { SubMenu } = Menu;
 
 function DoctorInfo (props: any & RouteComponentProps) {
 
-  const [patientCasesPat, setPatientCasesPat] = useState<any>({});
-  const [patientCasesHos, setPatientCasesHos] = useState<any>({});
+  const [allpatientCases, setAllpatientCases] = useState<any>([]);
+  const [patientCasesPat, setPatientCasesPat] = useState<any>([]);
+  const [patientCasesHos, setPatientCasesHos] = useState<any>([]);
   const [examination, setExaminationRes] = useState<any>({});
 
   const [patientCases, setPatientCases] = useState<any>({});
 
+  const formatPatientCases = (val = allpatientCases) => {
+    // 诊断
+    setPatientCasesPat(val.filter(item => {
+      return item.status == 0 || item.status === null;
+    }))
+    // 住院
+    setPatientCasesHos(val.filter(item => {
+      return item.status == 2;
+    }))
+}
+
+  const fetchDate = async () =>  {
+    const res:any = await patientCaseClient.getPatientCaseById({workerId: props.user.workerId})
+    if (res.code === 0) {
+      setAllpatientCases(res.data);
+
+      formatPatientCases(res.data);
+      
+    } else {
+      message.error({
+        content: '服务错误'
+      })
+    }
+
+    const examinationRes:any = await departmentClient.getExamination();
+    if (examinationRes.code === 0) {
+      setExaminationRes(examinationRes.data);
+    } else {
+      message.error({
+        content: '服务错误'
+      })
+    }
+  }
 
   useEffect(() => {
-    const fetchDate = async () =>  {
-      const res:any = await patientCaseClient.getPatientCaseById({workerId: props.user.workerId})
-      if (res.code === 0) {
-        
-        // 诊断
-        setPatientCasesPat(res.data.filter(item => {
-          return item.status == 0 ||item.status === null;
-        }))
-
-        // 住院
-        setPatientCasesHos(res.data.filter(item => {
-          return item.status == 2;
-        }))
-        
-      } else {
-        message.error({
-          content: '服务错误'
-        })
-      }
-
-      const examinationRes:any = await departmentClient.getExamination();
-      if (examinationRes.code === 0) {
-        setExaminationRes(examinationRes.data);
-      } else {
-        message.error({
-          content: '服务错误'
-        })
-      }
-    }
     fetchDate();
   }, []);
 
+  const search = (val: string) => {
+    if(!val) {
+      formatPatientCases();
+    } else {
+       // 诊断
+      setPatientCasesPat(allpatientCases.filter(item => {
+        return (item.status == 0 || item.status === null) && 
+        (new RegExp(val).test(item.caseId) || new RegExp(val).test(item.patientInfo.name));
+      }))
+      // 住院
+      setPatientCasesHos(allpatientCases.filter(item => {
+        return  item.status == 2 &&  (new RegExp(val).test(item.caseId) || new RegExp(val).test(item.patientInfo.name));
+      }))
+    }
+  }
 
   return (
     <div>
       <Layout className="doctor-schedule">
         <Sider width={200} style={{ background: '#fff' }}> 
+        <Input.Search key={'search'} placeholder="根据病例编号和姓名搜索" onSearch={search} />
+
         <Menu
           mode="inline"
           // defaultSelectedKeys={[getScheduleDateList()[0].toDateString()]}
           defaultOpenKeys={['sub1','sub2']}
           style={{ height: '100%', borderRight: 0 }}
         >
+         
           <SubMenu
             key="sub1"
             title={
