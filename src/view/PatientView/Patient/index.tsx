@@ -18,6 +18,8 @@ import DoctorItem from '../DoctorItem';
 import DepartmentItem from '../DepartmentItem';
 import User from '../User';
 import ArtcleData from '../ArtcleData';
+import ArtclePage from '../ArtclePage';
+
 
 import {LoginRegModal as LogRegFormModal} from '../../../component/loginAndReg'
 import { userLogin, userLogout } from '../../../action/user';
@@ -128,6 +130,7 @@ function Patient (props: PatientType & RouteComponentProps) {
           <Menu.Item key="Department">科室导航</Menu.Item>
           <Menu.Item key="DoctorInfo">医生介绍</Menu.Item>
           <Menu.Item key="Guide">就医指南</Menu.Item>
+          <Menu.Item key="Atrcle">文章/公告</Menu.Item>
           <div className="myvalue">
           {
              props.user &&  props.user.username &&  props.user.type == 1 ?
@@ -170,6 +173,7 @@ function Patient (props: PatientType & RouteComponentProps) {
           <Route path="/Patient/DepartmentItem/:departmentId" component={DepartmentItem}/>
 
           <Route path="/Patient/Atrcle/:textId" component={ArtcleData}/>
+          <Route path="/Patient/Atrcle/" component={ArtclePage}/>
           <Redirect to='/Patient/Home'></Redirect>
         </Switch>
       </div>

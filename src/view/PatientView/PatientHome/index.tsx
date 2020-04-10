@@ -261,7 +261,9 @@ function Home (props: any) {
               <span style={{
                 borderBottom: '4px solid #0065B3'
               }}>医院动态</span>
-              <span>更多</span>
+              <span onClick={() => {
+                props.history.push('/Patient/Atrcle/')
+              }}>更多</span>
             </div>
             <div>
               {
@@ -283,7 +285,9 @@ function Home (props: any) {
                 <span style={{
                 borderBottom: '4px solid #0065B3'
               }}>医疗文章</span>
-                <span>更多</span>
+                 <span onClick={() => {
+                    props.history.push('/Patient/Atrcle/')
+                  }}>更多</span>
               </div>
               <div>
               {

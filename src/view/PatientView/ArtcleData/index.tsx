@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Input, Col, Row, message } from 'antd';
+import { Button, Input, Col, Row, message, Breadcrumb } from 'antd';
 import { withRouter } from 'react-router';
 import adminClient from '../../../api/admin';
 import monent from 'moment';
@@ -39,11 +39,19 @@ function Text (props: any) {
   return (
     <>
       <div className="actcleData">
+        <Breadcrumb>
+          <Breadcrumb.Item href="">
+            <span onClick={() => {
+              props.history.push(`/Patient/Atrcle/`)
+            }}>医院公告</span>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>{title}</Breadcrumb.Item>
+        </Breadcrumb>
+
         <h2  className="actcleData-title">{title}</h2>
         <div 
-        className="actcleData-value"
-        dangerouslySetInnerHTML={{ __html:  value }}>
-
+          className="actcleData-value"
+          dangerouslySetInnerHTML={{ __html:  value }}>
         </div>
         <span  className="actcleData-update">
           更新日期：{monent(updata).format('YYYY-MM-DD')}
