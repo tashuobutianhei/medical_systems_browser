@@ -3,6 +3,8 @@ import ReactQuill from 'react-quill';
 import { Button, Input, Col, Row, message } from 'antd';
 import { withRouter } from 'react-router';
 import adminClient from '../../../api/admin';
+import { graphql } from 'react-apollo';
+import { fetchInfoALLGQL } from '../../../api/graphql/gql';
 
 import 'react-quill/dist/quill.snow.css';
 import 'antd/dist/antd.css'
@@ -42,26 +44,28 @@ function Text (props: any) {
   const [title, setTitle] = useState('');
   const [mode, setMode] = useState('data');
 
-  const fetchData = async (textId: string) => {
-    const res:any = await adminClient.findArtcle();
-      if(res.code === 0) {
-        const arctle = res.data.find(item => {
-          return item.textId == textId
-        })
-        setValue(arctle.value);
-        setTitle(arctle.title);
-      } else {
-        message.error('服务错误');
-      }
-  }
-
   useEffect(() => {
     if(props.match && props.match.params) {
       const textId = props.match.params.textId;
       if (/^create_/.test(textId)) {
         setMode('create');
       } else {
-        fetchData(textId); 
+        if(props.data && props.data.Info) {
+          const data = props.data.Info;
+
+          let arctle = {
+            value: '',
+            title: '',
+            update: ''
+          }
+          if(Array.isArray(data.articleInfo)) {
+            arctle =  data.articleInfo.find(item => {
+              return item.textId == textId
+            })
+          };
+          setValue(arctle.value);
+          setTitle(arctle.title);
+        }
       }
     }
   }, [props]);
@@ -134,4 +138,10 @@ function Text (props: any) {
   );
 }
 
-export default withRouter(Text);
+export default graphql(fetchInfoALLGQL, {
+  options() {
+    return {
+      fetchPolicy: 'cache-and-network',
+    };
+  } 
+})(withRouter(Text));

@@ -3,8 +3,6 @@ import { withRouter } from 'react-router-dom';
 import CONST from '../../../common/const';
 import {CSSTransition} from 'react-transition-group';
 import { HomeTwoTone, HeartTwoTone, ProfileTwoTone, IdcardTwoTone, } from '@ant-design/icons';
-import departmentClient from '../../../api/department';
-import adminClient from '../../../api/admin';
 import doctorClient from '../../../api/doctor';
 import patientCaseClient from '../../../api/patientCase';
 import moment from 'moment';
@@ -103,23 +101,6 @@ function Home (props: any) {
         content: '服务错误'
       })
     }
-
-    const res:any = await adminClient.findArtcle();
-    const array0 = [];
-    const array1 = [];
-    if(res.code === 0) {
-      res.data.forEach(item => {
-        if(item.type == 0 && array0.length < 8) {
-          array0.unshift(item);
-        } else if (item.type == 1 && array1.length < 8){
-          array1.unshift(item);
-        }
-      });
-      setArtcleList0(array0);
-      setArtcleList1(array1);
-    } else {
-      message.error('服务错误哦');
-    }
   }
 
   const reduceTodaySchedule = (todaySchedule) => {
@@ -181,8 +162,23 @@ function Home (props: any) {
       setCarouselList(data.commonInfo.carousel.split(',').filter(item => {
         return item !== ''
       }));
+
+
+      // 文章
+      const array0 = [];
+      const array1 = [];
+  
+      Array.isArray(data.articleInfo) && data.articleInfo.forEach(item => {
+        if(item.type == 0 && array0.length < 8) {
+          array0.unshift(item);
+        } else if (item.type == 1 && array1.length < 8){
+          array1.unshift(item);
+        }
+      });
+      setArtcleList0(array0.slice(0,10));
+      setArtcleList1(array1.slice(0,10));
     }
-  }, [props]);
+    }, [props]);
 
   return (
     <>

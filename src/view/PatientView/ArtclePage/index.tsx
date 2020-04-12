@@ -31,25 +31,6 @@ function Artcle (props: any) {
   const [key, setkey] = useState<string>('0');
   const [current, setcurrent] = useState<number>(1); 
 
-  const fetchData = async () => {
-    const res:any = await adminClient.findArtcle();
-    const array0 = [];
-    const array1 = [];
-    if(res.code === 0) {
-      res.data.forEach(item => {
-        if(item.type == 0 && array0.length < 8) {
-          array0.unshift(item);
-        } else if (item.type == 1 && array1.length < 8){
-          array1.unshift(item);
-        }
-      });
-      setArtcleList0(array0);
-      setArtcleList1(array1);
-    } else {
-      message.error('服务错误哦');
-    }
-  }
-
   const listItem = (info) => (
     <div className="patient-artcle-item" key={info.textId} onClick={() => {
       props.history.push(`/Patient/Atrcle/${info.textId}`)
@@ -61,8 +42,22 @@ function Artcle (props: any) {
   );
 
   useEffect(() => {
-    fetchData();
-  },[]);
+    if(props.data && props.data.Info) {
+      const data = props.data.Info;
+      const array0 = [];
+      const array1 = [];
+
+      Array.isArray(data.articleInfo) && data.articleInfo.forEach(item => {
+          if(item.type == 0 && array0.length < 8) {
+            array0.unshift(item);
+          } else if (item.type == 1 && array1.length < 8){
+            array1.unshift(item);
+          }
+        });
+      setArtcleList0(array0);
+      setArtcleList1(array1);
+    }
+  },[props]);
 
   useEffect(() => {
     if(artcleList0 || artcleList1) {
@@ -116,7 +111,13 @@ function Artcle (props: any) {
   );
 }
 
-export default withRouter(Artcle);
+export default graphql(fetchInfoALLGQL, {
+  options() {
+    return {
+      fetchPolicy: 'cache-and-network',
+    };
+  } 
+})(withRouter(Artcle));
 
 // graphql(fetchInfoALLGQL, {
 //   options() {

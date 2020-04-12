@@ -34,6 +34,13 @@ export const fetchInfoALLGQL = gql`
         doctor
         order
       }
+      articleInfo {
+        textId
+        value
+        title
+        update
+        type
+      }
     } 
   }
 `
@@ -51,6 +58,13 @@ export const fetchInfoCommonGQL = gql`
         carousel
         doctor
         order
+      }
+      articleInfo {
+        textId
+        value
+        title
+        update
+        type
       }
     } 
   }

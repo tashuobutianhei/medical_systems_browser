@@ -100,7 +100,7 @@ function Text (props: any) {
         <TabPane tab="信息文章" key="text">
         <Button type="primary" onClick={() => {
             props.history.push(`/Admin/TextEdit/create_1`)
-         }}>发布动态</Button>
+         }}>发布文章</Button>
          <List
           className="demo-loadmore-list"
           itemLayout="horizontal"
