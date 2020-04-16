@@ -8,8 +8,9 @@ import orderClient from '../../../../api/order';
 const {TextArea} = Input;
 function Order (props: any) {
 
-  const [count, setcount] = useState<number>(0);
+  const [count, setcount] = useState<number>(-1);
   const [switchVal, setSwitch] = useState<boolean>(false);
+  const [modalVisbale, setModalVisbale] = useState(false);
   const intRef = useRef<any>();
 
   const layout = {
@@ -29,27 +30,18 @@ function Order (props: any) {
 
   useEffect(()=>{
     if(count === 5) {
-      Modal.success({
-        content:(
-          <div>
-            <p>挂号已经成功，请您按找相应的时间前往医院就诊</p>
-            <p>{count}s后将返回首页</p>
-          </div>
-        ) 
-      });
+      setModalVisbale(true);
+      let id = setInterval(()=> {
+        setcount(count => count - 1);
+      }, 1000);
+      intRef.current = id;
     }
-    let mid = count;
-    let id = setInterval(()=> {
-      setcount(--mid);
-      if(mid === 0) {
-        window.location.href = '/Patient';
-      } 
-    }, 1000);
-    intRef.current = id;
-  
-    return () => {
-      if(intRef.current ) {
-        clearInterval(intRef.current )
+    if (count === 0) {
+      window.location.href = '/Patient';
+      return () => {
+        if(intRef.current) {
+          clearInterval(intRef.current )
+        }
       }
     }
   }, [count])
@@ -73,9 +65,14 @@ function Order (props: any) {
 
   return (
     <div className="order-form">
+        <Modal visible={modalVisbale}>
+          <div>
+            <p>挂号已经成功，请您按找相应的时间前往医院就诊</p>
+            <p>{count}s后将返回首页</p>
+          </div>
+        </Modal>
         <p className="order-fom-title"></p>
-        <p>请尽可能的填写病情，描述自身身体状况，以便于医生可以获得更多的了解关于您的病情（涉及方面可有：发病时间，症状，自身经历，是否吃过其他药物，是否有其他就医经历）</p>
-        {count}
+        <p >请尽可能的填写病情，描述自身身体状况，以便于医生可以获得更多的了解关于您的病情（涉及方面可有：发病时间，症状，自身经历，是否吃过其他药物，是否有其他就医经历）</p>
         <div className="order-form-content">
           <Form
             {...layout}
