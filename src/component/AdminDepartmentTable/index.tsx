@@ -1,5 +1,5 @@
 /* eslint-disable react/display-name */
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { message, Table, Button } from 'antd';
 import CONST from '../../common/const';
 import adminClient from '../../api/admin';

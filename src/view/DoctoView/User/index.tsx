@@ -1,6 +1,6 @@
 import React from 'react'
 import { Switch, Route, Redirect, withRouter, RouteComponentProps } from 'react-router-dom';
-import { Layout, Menu, message } from 'antd';
+import { Layout, Menu } from 'antd';
 
 import UserInfo from '../UserGroup/UserInfo';
 

@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { DownOutlined, UserOutlined } from '@ant-design/icons';
+import React from 'react'
+import { DownOutlined } from '@ant-design/icons';
 import { Layout, Menu, Avatar, Dropdown } from 'antd';
 import { Route, Switch, withRouter, Redirect, RouteComponentProps } from 'react-router-dom'
 import { connect } from 'react-redux'
@@ -15,7 +15,7 @@ import DoctorInfo from '../User/index';
 import 'antd/dist/antd.css'
 import './index.scss'
 
-const { Header, Content, Footer, Sider } = Layout;
+const { Header, Content, Footer } = Layout;
 
 const mapStateToProps = (state: { user: any; }) => {
   return {

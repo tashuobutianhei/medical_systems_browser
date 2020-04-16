@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { Steps, Divider, message, Tabs, Pagination } from 'antd';
-import { connect } from 'react-redux';
+import { Tabs, Pagination } from 'antd';
 import moment from 'moment';
-import adminClient from '../../../api/admin'
 
 import { graphql } from 'react-apollo';
 import { fetchInfoALLGQL } from '../../../api/graphql/gql';

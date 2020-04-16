@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import adminClient from '../../../api/admin';
-import { message, Table, Statistic, Row, Col, Button, Avatar, Pagination, Form, Radio, Input } from 'antd';
+import { message, Table, Button, Avatar, Pagination, Form, Input } from 'antd';
 
 import './index.scss';
 

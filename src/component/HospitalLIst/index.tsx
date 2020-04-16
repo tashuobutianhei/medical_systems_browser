@@ -1,10 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { withRouter, RouteComponentProps } from 'react-router-dom';
-import CONST from '../../common/const';
-import { Input, Select, Button, Row, Col, Switch, message, Divider, Collapse, Radio } from 'antd';
-import patientCaseClient from '../../api/patientCase';
+import { Input, Select, Button, Row, Col, Collapse, Radio } from 'antd';
 import moment from 'moment';
-import randomString from 'random-string';
 import { updateHospitalInfo, updateHospitalAssay } from '../../action/patientCase';
 
 

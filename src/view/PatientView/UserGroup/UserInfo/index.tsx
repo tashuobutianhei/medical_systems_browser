@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { message, Upload, Button, Input, Radio, Avatar, Row, Col } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
 import userClient from '../../../../api/user';
 import { UserOutlined } from '@ant-design/icons';
 import jsCookie from 'js-cookie';

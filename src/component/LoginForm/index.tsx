@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Input, Checkbox, message, Row, Col, Form, Tabs, Button } from 'antd';
+import { Input, message, Row, Col, Form, Tabs, Button } from 'antd';
 import userClient from '../../api/user'
 
 import '@ant-design/compatible/assets/index.css';
@@ -113,7 +113,7 @@ function LoginForm(props: Props) {
                 />
                 </Col>
                 <Col  span="4">
-                  <img className="login-cap" src={cap} onClick={() => {
+                  <img className="login-cap" alt="验证码" src={cap} onClick={() => {
                     fetchCap();
                   }}></img>
                 </Col>

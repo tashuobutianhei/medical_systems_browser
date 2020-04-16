@@ -14,7 +14,7 @@ import './index.scss'
 
 import SubMenu from 'antd/lib/menu/SubMenu';
 
-const { Header, Content, Footer, Sider } = Layout;
+const {Content, Sider } = Layout;
 
 function User (props: RouteComponentProps) {
 

@@ -4,7 +4,6 @@ import { Table, message } from 'antd';
 import moment from 'moment';
 import CONST from '../../common/const';
 import doctorClient from '../../api/doctor';
-import departmentClient from '../../api/department';
 
 import 'antd/dist/antd.css'
 import './index.scss'

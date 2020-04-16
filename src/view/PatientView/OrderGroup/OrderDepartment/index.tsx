@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { Button, message, Row, Col } from 'antd';
-import { graphql } from 'react-apollo';
-import { fetchInfoALLGQL } from '../../../../api/graphql/gql';
+import React from 'react'
+import { Button, Row, Col } from 'antd';
 
 import 'antd/dist/antd.css'
 import './index.scss'

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 // import { Carousel, Row, Col, Button, message, Statistic,BackTop, Switch } from 'antd';
 import { withRouter, Route, Redirect, Switch } from 'react-router-dom';
 import {CSSTransition} from 'react-transition-group';

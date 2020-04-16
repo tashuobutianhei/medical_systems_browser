@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { DownOutlined, UserOutlined } from '@ant-design/icons';
 import { Layout, Menu, Avatar, Dropdown } from 'antd';
 import { Route, Switch, withRouter, Redirect, RouteComponentProps } from 'react-router-dom'
@@ -112,7 +112,7 @@ function Patient (props: PatientType & RouteComponentProps) {
   <div id="particles-js"></div>
   <Layout className="layout">
     <Header className="header">
-      <img src="/img/logo.png" onClick={(e: any) => {
+      <img src="/img/logo.png" alt="头像" onClick={(e: any) => {
             props.history.push(`/Home`)
       }}></img>
       <Menu
@@ -137,7 +137,7 @@ function Patient (props: PatientType & RouteComponentProps) {
               <div>
                 <Avatar src={props.user.avatar ? `http://localhost:3000${props.user.avatar}` : ''}/>
                 <Dropdown overlay={menu} className="div">
-                  <a className="ant-dropdown-link" href="#">
+                  <a className="ant-dropdown-link" href="">
                     <span>{ props.user.username}</span>
                     <DownOutlined />
                   </a>

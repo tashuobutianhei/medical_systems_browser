@@ -22,11 +22,11 @@ type Props = {
   which? : string
 }
 
-type assayType = {
-  assayId: number,
-  examinationId: number,
-  examinationResult: string
-}
+// type assayType = {
+//   assayId: number,
+//   examinationId: number,
+//   examinationResult: string
+// }
 
 function DoctorWorkTable (props: Props & RouteComponentProps) {
 

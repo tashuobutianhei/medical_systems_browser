@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
-import { DownOutlined, UserOutlined } from '@ant-design/icons';
-import { Layout, Menu, Avatar, Dropdown } from 'antd';
+import React from 'react'
+import { DownOutlined } from '@ant-design/icons';
+import { Layout, Menu, Dropdown } from 'antd';
 import { Route, Switch, withRouter, Redirect, RouteComponentProps } from 'react-router-dom'
 import { connect } from 'react-redux'
 

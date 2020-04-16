@@ -1,6 +1,6 @@
 /* eslint-disable react/display-name */
 import React, { useState, useEffect, useReducer } from 'react'
-import { Tabs, message, Upload, Badge, Button, Table, Modal, Input } from 'antd';
+import { Tabs, message, Upload, Button, Table, Modal, Input } from 'antd';
 import { graphql } from 'react-apollo';
 import { fetchInfoCommonGQL } from '../../../api/graphql/gql';
 import adminClient from '../../../api/admin';

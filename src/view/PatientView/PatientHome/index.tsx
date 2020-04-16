@@ -7,8 +7,8 @@ import doctorClient from '../../../api/doctor';
 import patientCaseClient from '../../../api/patientCase';
 import moment from 'moment';
 
-import { ForwardFilled, RightOutlined } from '@ant-design/icons';
-import { Carousel, Row, Col, Button, message, Statistic,BackTop } from 'antd';
+import { ForwardFilled } from '@ant-design/icons';
+import { Carousel, Row, Col, message, Statistic } from 'antd';
 import DoctorItem from '../../../component/DoctorItem';
 
 import { graphql } from 'react-apollo';

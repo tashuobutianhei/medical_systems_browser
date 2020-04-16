@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter, Route, Switch } from 'react-router-dom';
 import patientCaseClient from '../../../api/patientCase';
 import departmentClient from '../../../api/department';
-import { CalendarOutlined, UnorderedListOutlined} from '@ant-design/icons';
+import { CalendarOutlined } from '@ant-design/icons';
 import DoctorWorkTable from '../../../component/DoctorWorkTable'
 
 import 'antd/dist/antd.css'
