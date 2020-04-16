@@ -208,7 +208,7 @@ function Home (props: any) {
             GudieList.map((item, index) => {
               if (item.name === 'img') {
                 return(
-                  <img className="PatientHome-body-gudie-item" src={`/img/${item.path}`}></img>
+                  <img className="PatientHome-body-gudie-item" src={`/img/${item.path}`} key={index}></img>
                 )
               } else {
                 return(

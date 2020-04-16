@@ -31,9 +31,9 @@ function Deprartment (props: any) {
 
       <Row gutter={16}>
         {
-          departmentList && departmentList.map(item => {
+          departmentList && departmentList.map((item, index) => {
             return (
-              <Col key={item.DeprartmentId} span={4}>
+              <Col key={item.DeprartmentId || index} span={4}>
                 <DepartmentItem department={item}></DepartmentItem>
               </Col>
             ) 
