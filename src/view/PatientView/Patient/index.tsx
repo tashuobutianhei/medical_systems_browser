@@ -83,32 +83,32 @@ function Patient (props: PatientType & RouteComponentProps) {
       props.onLogin(userInfo)
     }}
   ></LogRegFormModal>
-        <div className="PatientHome-fixed">
-        <div className="PatientHome-fixed-item" onClick={() => {
-          props.history.push(`/Patient/Order`)
-        }}>
-          <span className="PatientHome-fixed-item-logo"><ClockCircleOutlined/></span>
-          <span className="PatientHome-fixed-item-text">预约挂号</span>
-        </div>
-        <div className="PatientHome-fixed-item" onClick={() => {
-          props.history.push(`/Patient/Guide`)
-        }}>
-          <span className="PatientHome-fixed-item-logo"><BarsOutlined/></span>
-          <span className="PatientHome-fixed-item-text">门诊查询</span>
-        </div>
-        <div className="PatientHome-fixed-item" onClick={() => {
-          props.history.push(`/Patient/Department`)
-        }}>
-          <span className="PatientHome-fixed-item-logo"><VerifiedOutlined/></span>
-          <span className="PatientHome-fixed-item-text">特色科室</span>
-        </div>
-        <div className="PatientHome-fixed-item">
-          <span className="PatientHome-fixed-item-logo"><ArrowUpOutlined /></span>
-          <span className="PatientHome-fixed-item-text">
-            <a href="#">返回顶部 </a>
-          </span>
-        </div>
+    <div className="PatientHome-fixed">
+      <div className="PatientHome-fixed-item" onClick={() => {
+        props.history.push(`/Patient/Order`)
+      }}>
+        <span className="PatientHome-fixed-item-logo"><ClockCircleOutlined/></span>
+        <span className="PatientHome-fixed-item-text">预约挂号</span>
       </div>
+      <div className="PatientHome-fixed-item" onClick={() => {
+        props.history.push(`/Patient/Guide`)
+      }}>
+        <span className="PatientHome-fixed-item-logo"><BarsOutlined/></span>
+        <span className="PatientHome-fixed-item-text">门诊查询</span>
+      </div>
+      <div className="PatientHome-fixed-item" onClick={() => {
+        props.history.push(`/Patient/Department`)
+      }}>
+        <span className="PatientHome-fixed-item-logo"><VerifiedOutlined/></span>
+        <span className="PatientHome-fixed-item-text">特色科室</span>
+      </div>
+      <div className="PatientHome-fixed-item">
+        <span className="PatientHome-fixed-item-logo"><ArrowUpOutlined /></span>
+        <span className="PatientHome-fixed-item-text">
+          <a href="#">返回顶部 </a>
+        </span>
+      </div>
+  </div>
   <div id="particles-js"></div>
   <Layout className="layout">
     <Header className="header">

@@ -29,6 +29,7 @@
       text-align: center;
       line-height: 56px;
       cursor: pointer;
+      // display: flex;
       overflow: hidden;
       margin-bottom: 20px;
 
@@ -37,15 +38,6 @@
         width: 56px;
         height: 56px;
         font-size: 35px;
-      }
-
-      &-logo:hover {
-        background-color: red;
-        display: none;
-
-        .PatientHome-fixed-item-text {
-          display: block;
-        }
       }
 
       &-text {
@@ -61,6 +53,15 @@
         font-weight: bolder;
         background-color: #015128;
         color: #fff;
+      }
+    }
+
+    &-item:hover  .PatientHome-fixed-item-logo {
+      background-color: red;
+      display: none;
+
+      .PatientHome-fixed-item-text {
+        display: block;
       }
     }
   }
