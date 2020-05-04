@@ -165,7 +165,7 @@ function User (props: any) {
   useEffect(() => {
     if(Object.keys(props.user).length > 0 && departmentList.length > 0) {
       setDepartmentName(departmentList.find(item => {
-        return userInfo.departmentId === item.departmentId
+        return userInfo.departmentId == item.departmentId
       }).departmentName)
     }
   }, [departmentList, props.user]);
