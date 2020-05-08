@@ -36,10 +36,10 @@ const Demo = (props: propsType) => {
     const res:any = await adminClient.addDoctor(values);
     if(res.code === 0 ) {
       message.success({
-        content: '添加成功'
+        content: `添加成功,密码为${res.data}`
       })
       props.setAddDoctorVisable(false);
-      props.success();
+      props.success(); 
     } else {
       message.error({
         content: '添加失败'
