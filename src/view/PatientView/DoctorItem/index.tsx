@@ -51,7 +51,7 @@ function DoctorItem (props: any) {
 
       <Row  className="DoctorItem-body" gutter={32}>
         <Col span={6}>
-          <img src={doctor.avatar ? `http://localhost:3000${doctor.avatar}`: '/img/doctor1.jpeg'}></img>
+          <img src={doctor.avatar && doctor.avatar !== '' ? `http://localhost:3000${doctor.avatar}`: '/img/doctor1.jpeg'}></img>
         </Col>
         <Col span={18}>
           <Row>
