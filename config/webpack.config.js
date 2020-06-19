@@ -24,6 +24,8 @@ const getClientEnvironment = require('./env');
 const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin');
 const ForkTsCheckerWebpackPlugin = require('react-dev-utils/ForkTsCheckerWebpackPlugin');
 const typescriptFormatter = require('react-dev-utils/typescriptFormatter');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin'); // 代码压缩
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin; // 体积分析
 
 const postcssNormalize = require('postcss-normalize');
 
@@ -191,9 +193,17 @@ module.exports = function(webpackEnv) {
       // module chunks which are built will work in web workers as well.
       globalObject: 'this',
     },
+    externals:{
+    // 'antd':'antd',
+    // 'react': 'React',    
+    // 'moment': 'moment',    
+    // 'react-dom': 'ReactDOM',    
+    // 'react-router-dom': 'ReactRouterDOM' 
+    },
     optimization: {
       minimize: isEnvProduction,
       minimizer: [
+        new UglifyJsPlugin(),
         // This is only used in production mode
         new TerserPlugin({
           terserOptions: {
@@ -507,6 +517,7 @@ module.exports = function(webpackEnv) {
     },
     plugins: [
       // Generates an `index.html` file with the <script> injected.
+      new BundleAnalyzerPlugin(),
       new HtmlWebpackPlugin(
         Object.assign(
           {},

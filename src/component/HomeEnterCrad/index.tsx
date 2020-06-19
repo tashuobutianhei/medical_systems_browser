@@ -53,7 +53,7 @@ function HomeEnterCrad(props: Props & RouteComponentProps & RouteComponentProps)
 		<>
 		<div className="homeentercrad" style={{backgroundColor: props.color}}>
 			<div className="homeentercrad-body">
-				<img src={imgUrl}></img>
+				<img src={imgUrl} alt={props.enterText}></img>
 				<span className="homeentercrad-body-text" 
 					style={{color: props.textColor}}>{props.enterText}</span>
 				<Button className="homeentercrad-body-button" 

@@ -102,6 +102,7 @@ function Order (props: any) {
                 return (
                   <p key={item.doctor.workerId} onClick={() => {
                     orderHandle({
+                      // eslint-disable-next-line react/prop-types
                       departmentId: props.order.department.departmentId,
                       workerId: item.doctor.workerId,
                       wokrId: item.wokrId,

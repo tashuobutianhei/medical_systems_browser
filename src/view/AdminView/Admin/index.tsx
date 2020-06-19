@@ -60,7 +60,7 @@ function Doctor (props: userType & RouteComponentProps) {
   return <>
   <Layout className="layout">
     <Header className="header">
-      <img src="/img/logo.png" onClick={(e: any) => {
+      <img src="/img/logo.png" alt="logo" onClick={(e: any) => {
             props.history.push(`/Home`)
       }}></img>
       <Menu

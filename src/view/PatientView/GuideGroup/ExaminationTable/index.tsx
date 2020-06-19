@@ -34,6 +34,7 @@ function Info (props:any) {
           pagination={false}
           rowKey={record => record.examinationDesc} 
           expandable={{
+            // eslint-disable-next-line react/display-name
             expandedRowRender: record => <p style={{ margin: 0 }}>{record.examinationDesc}</p>,
             rowExpandable: record => record.name !== 'Not Expandable',
           }}

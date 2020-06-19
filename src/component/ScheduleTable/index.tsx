@@ -31,8 +31,7 @@ function ScheduleTable(props: {departmentId: string, user: any} & any) {
     changeDctorList(res.data.map((item: any) => {
      return {
       ...item,
-     }
-    }));
+     }}));
     }
   }
   
@@ -93,8 +92,18 @@ function ScheduleTable(props: {departmentId: string, user: any} & any) {
       return;
     }
     getDoctors({departmentId: props.departmentId});
-    fetchData();
   }, [props.match.params.workDay]);
+
+  // 依赖医生列表
+  useEffect(() => {
+    if(!props.departmentId) {
+      return;
+    }
+    if(doctorList.length > 0)  {
+      fetchData();
+    }
+  }, [props.match.params.workDay, doctorList]);
+
 
   useEffect(() => {
     if (data.length > 0) {  
@@ -203,12 +212,13 @@ function ScheduleTable(props: {departmentId: string, user: any} & any) {
               <Button type="primary"  onClick={() => {
                 addWork(record);
               }}>确定</Button>
-              <Button type="danger"  onClick={() => {
+              <Button type="primary" danger onClick={() => {
                 changeAddStatus(record, false);
                 changeseletDoctor('');
               }}>取消</Button>
             </div>
             :<Button type="primary" 
+              // eslint-disable-next-line react/prop-types
               disabled={props.user.position !== 'director'} 
               onClick={()=> {
                 changeAddStatus(record, true);

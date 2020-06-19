@@ -277,7 +277,7 @@ function User (props: any) {
               }}>确认</Button>
             </Col>
             <Col span="8">
-              <Button type="danger"
+              <Button type="primary" danger
               className="userInfo-button"
               onClick={() => {
                 setMode('data');

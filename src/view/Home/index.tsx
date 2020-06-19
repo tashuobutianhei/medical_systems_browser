@@ -54,7 +54,7 @@ function Home (props: PatientType) {
     <div className="modal"> </div>
     <div className="home">
       <div className="home-tilte">
-        <img src='/img/logo.png'></img>
+        <img src='/img/logo.png' alt="logo"></img>
         <p className="home-tilte-text"></p>
       </div>
       <div className="home-body">

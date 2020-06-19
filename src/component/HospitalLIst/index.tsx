@@ -227,7 +227,7 @@ function DoctorWorkTable (props: Props & RouteComponentProps) {
                             handleAddAssay(hosItem.HospitalizationId)
                           }}>添加</Button>
                           {
-                            hosItem.assays.length > 1 ?  <Button type='danger' 
+                            hosItem.assays.length > 1 ?  <Button type="primary" danger
                             disabled= {
                               props.mode !== 'hospital' || hosItem.type === 'data'
                             }

@@ -27,8 +27,9 @@ const AdminUser = () => {
       title: '头像',
       dataIndex: 'avatar',
       key: 'avatar',
+      // eslint-disable-next-line react/display-name
       render: (record: any) => ( 
-        <Avatar src={record ? `http://localhost:3000${record}` : ''}/>
+        <Avatar src={record ? `http://localhost:3000${record}` : ''} />
       )
     },
     {

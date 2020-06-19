@@ -31,6 +31,7 @@ function Artcle (props: any) {
 
   const listItem = (info) => (
     <div className="patient-artcle-item" key={info.textId} onClick={() => {
+      // eslint-disable-next-line react/prop-types
       props.history.push(`/Patient/Atrcle/${info.textId}`)
     }}>
       <span>{info.title}</span>

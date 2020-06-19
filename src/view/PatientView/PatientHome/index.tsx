@@ -133,7 +133,8 @@ function Home (props: any) {
       });
 
       let arrayDoctorWork = [];
-      arrayWork.forEach(item => {
+
+      Array.from(new Set(arrayWork)).forEach(item => {
         arrayDoctorWork.push(doctorList.find(doctor => {
           return doctor.workerId === item;
         }));

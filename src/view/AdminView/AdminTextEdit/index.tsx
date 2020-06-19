@@ -59,9 +59,12 @@ function Text (props: any) {
             update: ''
           }
           if(Array.isArray(data.articleInfo)) {
-            arctle =  data.articleInfo.find(item => {
+            let midarctle =  data.articleInfo.find(item => {
               return item.textId == textId
             })
+            if(midarctle) {
+              arctle = midarctle;
+            }
           };
           setValue(arctle.value);
           setTitle(arctle.title);

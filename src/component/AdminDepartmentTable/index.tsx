@@ -49,7 +49,7 @@ const AdminDepartment = (props: porpsType) => {
       title: '操作',
       dataIndex: 'action',
       width: 200 ,
-      render: (text, record) => <Button type="danger"
+      render: (text, record) => <Button type="primary" danger
       onClick={() => {
         deleteDepartment(record.departmentId);
       }}>

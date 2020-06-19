@@ -2,6 +2,7 @@
   "name": "medical_systems_client",
   "version": "0.1.0",
   "private": true,
+  "homepage": "./",
   "dependencies": {
     "@babel/core": "7.8.4",
     "@svgr/webpack": "4.3.3",
@@ -22,7 +23,7 @@
     "@types/react-transition-group": "^4.2.3",
     "@typescript-eslint/eslint-plugin": "^2.10.0",
     "@typescript-eslint/parser": "^2.10.0",
-    "antd": "^4.0.0",
+    "antd": "^4.3.3",
     "apollo-boost": "^0.4.7",
     "axios": "^0.19.2",
     "babel-eslint": "10.0.3",
@@ -54,7 +55,7 @@
     "jest-watch-typeahead": "0.4.2",
     "js-cookie": "^2.2.1",
     "mini-css-extract-plugin": "0.9.0",
-    "moment": "^2.24.0",
+    "moment": "^2.26.0",
     "node-sass": "^4.13.1",
     "optimize-css-assets-webpack-plugin": "5.0.3",
     "particlesjs": "^2.2.3",
@@ -85,6 +86,7 @@
     "terser-webpack-plugin": "2.3.4",
     "ts-pnp": "1.1.5",
     "typescript": "^3.7.5",
+    "uglifyjs-webpack-plugin": "^2.2.0",
     "url-loader": "2.3.0",
     "webpack": "4.41.5",
     "webpack-dev-server": "3.10.2",
@@ -127,7 +129,8 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-react": "^7.18.3",
     "eslint-plugin-react-hooks": "^1.7.0",
-    "eslint-plugin-standard": "^4.0.1"
+    "eslint-plugin-standard": "^4.0.1",
+    "webpack-bundle-analyzer": "^3.7.0"
   },
   "jest": {
     "roots": [

@@ -10,6 +10,7 @@ function EditTable (props: any) {
       title: '',
       width: 40,
       render: (a) => {
+        // eslint-disable-next-line react/prop-types
         return  <span>{Array.isArray(props.data) && props.data.map(item => item.workerId).indexOf(a.workerId)+1}</span>
       }
      
@@ -43,6 +44,7 @@ function EditTable (props: any) {
       title: 'action',
       dataIndex: 'action',
       render: () => <a onClick={() => {
+        // eslint-disable-next-line react/prop-types
         props.delete(props.data, props.wokrId);
       }}>移除</a>,
     }]

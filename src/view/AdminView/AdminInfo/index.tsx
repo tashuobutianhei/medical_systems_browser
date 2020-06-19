@@ -61,7 +61,7 @@ const AdminInfo = (props: any) => {
       key: 'action',
       render: (record: any) => {
         return (
-          (<Button type="danger" 
+          (<Button type="primary" danger
           onClick={() => {
             Modal.confirm({
               content: '是否确定删除',

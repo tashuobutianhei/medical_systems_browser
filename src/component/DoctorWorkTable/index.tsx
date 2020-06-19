@@ -316,7 +316,7 @@ function DoctorWorkTable (props: Props & RouteComponentProps) {
                       <Button type='primary' 
                       disabled={mode !== 'doctor'} 
                       onClick={handleAddAssay}>添加</Button>
-                      <Button type='danger' 
+                      <Button type="primary" danger
                       disabled={mode !== 'doctor'} 
                       onClick={() => {
                         handleDeleteAssay(assayItem.assayId)
